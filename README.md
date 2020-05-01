@@ -3,4 +3,4 @@ CAPSTONE BUG TRACKER PROJECT
 
 
 # Owners
-Antonio, Dana, Princess, Ramon, Ryan
+Antonio, Dana, Princess, Ramon, Ryan, Armando
