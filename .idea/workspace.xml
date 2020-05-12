@@ -9,7 +9,35 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300" />
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/executeUserScriptTests.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/brokenTestScript.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="4" selection-start-column="4" selection-end-column="4" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/workingTestScript.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state>
+              <caret column="19" selection-start-column="19" selection-end-column="19" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -46,6 +74,9 @@
         <option value="$PROJECT_DIR$/brokenTestScript.py" />
         <option value="$PROJECT_DIR$/testScript.py" />
         <option value="$PROJECT_DIR$/executeUserScript.py" />
+        <option value="$PROJECT_DIR$/Tests/workingTestScript.py" />
+        <option value="$PROJECT_DIR$/Tests/executeUserScriptTests.py" />
+        <option value="$PROJECT_DIR$/Tests/brokenTestScript.py" />
       </list>
     </option>
   </component>
@@ -59,9 +90,9 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="561" />
-    <option name="y" value="17" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="365" />
+    <option name="y" value="13" />
     <option name="width" value="1456" />
     <option name="height" value="876" />
   </component>
@@ -85,7 +116,13 @@
     </panes>
   </component>
   <component name="PropertiesComponent">
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Ryan Campbell\PycharmProjects\TheBugTracker" />
+    </key>
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -156,7 +193,7 @@
       <window_info content_ui="combo" id="Project" order="0" sideWeight="0.49948078" visible="true" weight="0.13277134" />
       <window_info id="Structure" order="1" sideWeight="0.5005192" side_tool="true" weight="0.13277134" />
       <window_info anchor="bottom" id="Version Control" weight="0.32791877" />
-      <window_info anchor="bottom" id="Python Console" sideWeight="0.49947312" weight="0.25583756" />
+      <window_info anchor="bottom" id="Python Console" sideWeight="0.49947312" weight="0.25490198" />
       <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.4243655" />
       <window_info anchor="bottom" id="Event Log" sideWeight="0.50052685" side_tool="true" weight="0.25583756" />
       <window_info anchor="bottom" id="Messages" />
@@ -236,6 +273,27 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="374">
           <caret line="22" column="29" selection-start-line="22" selection-start-column="29" selection-end-line="22" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/workingTestScript.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="19" selection-start-column="19" selection-end-column="19" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/brokenTestScript.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="4" selection-start-column="4" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/executeUserScriptTests.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
         </state>
       </provider>
     </entry>

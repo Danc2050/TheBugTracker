@@ -29,13 +29,11 @@ class testScript():
             return
         print("Test passed without -S in command line argguements. TEST FAILED")
 
-
-
     def run(self):
         self.testWorkingScript()
         self.testBrokenScript()
         self.testCommandLine()
 
 if __name__ == '__main__':
-    test = testScript()
-    test.run()
+    test_run = testScript()
+    test_run.run()
