@@ -10,18 +10,7 @@ class readConfig():
 
     def __init__(self, user_info=None):
         self.configPath = None
-        self.config = {
-            "name": {
-                "first": "",
-                "last": ""
-            },
-            "email": "",
-            "placeholder1": "",
-            "placeholder2": "",
-            "placeholder3": "",
-            "placeholder4": "",
-            "placeholder5": "",
-        }
+        self.config = None
         try:
             self.configPath = os.path.join(Path.home(), BUGTRACKER)
             if Path(self.configPath).is_file() is False:
