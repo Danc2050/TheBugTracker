@@ -3,7 +3,7 @@ from pathlib import Path
 import json
 
 
-BUGTRACKER = ".bt_config"
+BUGTRACKER = ".autobug.ini"
 
 
 class readConfig():
@@ -44,9 +44,3 @@ class readConfig():
         """
         if not self.config is None:
             print(self.config)
-
-
-if __name__ == '__main__':
-    # If wanted for testing purposes
-    rc = readConfig()
-    rc.showConfig()
