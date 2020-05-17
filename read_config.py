@@ -44,3 +44,20 @@ class readConfig():
         """
         if not self.config is None:
             print(self.config)
+
+    def getConfig(self, key=None):
+        """
+        Returns a configuration value depending on the key 
+        provided. If invalid key provided returns None.
+		(NOTE: Getting name key returns dict of first
+                                        and last name)
+        *CURRENT VALID KEYS: name,email,placeholder1,placeholder2,
+							 placeholder3, placeholder4, placeholder5
+        param: key:config file Key
+        """
+        if not self.config is None:
+            try:
+                return self.config[key]
+            except KeyError:
+                print("Invalid configuration key provided")
+                return None
