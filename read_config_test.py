@@ -10,16 +10,43 @@ class testReadConfig():
         print("testing")
 
     def testInit(self):
+        '''
+            CASES:
+                When file DOES NOT EXIST:
+                    test PASSES if default file is created
+                    test FAILS if we encounter an exception
+                        -- FAIL occurs if unable to load config file
+                When file EXISTS:
+                    test PASSES if config path and config valid
+                    test FAILS if we encounter an exception
+                        -- FAIL occurs if unable to load config file
+        '''
         configClass = readConfig(user_info=None)
         test = os.path.join(Path.home(), BUGTRACKER)
         if Path(test).is_file() is True:
-            print("TEST SUCCESS: Executed successfully. Created init/default file successfully. \n")
+            print("TEST SUCCESS: Executed successfully. Created init/default file successfully. Config variables "
+                  "initialized. \n")
+        else:
+            print("TEST FAILED: Encountered an error/exception. \n")
+
+        test = os.path.join(Path.home(), BUGTRACKER)
+        if Path(test).is_file() is True:
+            print("TEST SUCCESS: Executed successfully. Config variables initialized. \n")
             os.remove(Path(test))
         else:
             print("TEST FAILED: Encountered an error/exception. \n")
             os.remove(Path(test))
 
     def testGetConfig(self):
+        '''
+            CASES:
+                When key is VALID:
+                    test PASSES if configuration value returned
+                    test FAILS if None returned
+                When key is INVALID:
+                    test PASSES if None returned
+                    test FAILS if configuration value returned
+        '''
         configClass = readConfig(user_info=None)
         test = configClass.getConfig(key='name')
         print("KEY RETURNS: " + str(test))
@@ -40,6 +67,11 @@ class testReadConfig():
 
 
     def testShowConfig(self):
+        '''
+            CASES:
+                Test PASSES if captured stdout matches expected output
+                Test FAILS if captured stdout does not match expected output
+        '''
         configClass = readConfig(user_info=None)
         capturedOutput = io.StringIO()
         sys.stdout = capturedOutput
