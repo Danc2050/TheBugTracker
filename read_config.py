@@ -60,7 +60,3 @@ class readConfig():
             except KeyError:
                 print("Invalid configuration key provided")
                 return None
-if __name__ == '__main__':
-    # If wanted for testing purposes
-    rc = readConfig()
-    rc.showConfig()
