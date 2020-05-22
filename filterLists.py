@@ -9,7 +9,7 @@ class filterBugReport():
             does not do anything if there is no files that exist
         """
         print("***Filtering bug reports with white/black lists***\n")
-        delimiter = '\n'
+        delimiter = '\n\n'      # individual bugs in each file would need to be separated by two new lines [YOU CAN CHANGE DELIMITER IF YOU WNAT]
         if path.exists("blacklist.txt"):
             self.black_data = pd.read_csv('blacklist.txt', sep=delimiter,
                                           header=None, engine='python')
