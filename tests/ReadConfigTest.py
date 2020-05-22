@@ -34,10 +34,10 @@ class testReadConfig:
         test = os.path.join(Path.home(), BUGTRACKER)
         if Path(test).is_file() is True:
             print("TEST SUCCESS: Executed successfully. Config variables initialized. \n")
-            os.remove(Path(test))
+            # os.remove(Path(test))
         else:
             print("TEST FAILED: Encountered an error/exception. \n")
-            os.remove(Path(test))
+            # os.remove(Path(test))
 
     def testGetConfig(self):
         """
@@ -54,10 +54,10 @@ class testReadConfig:
         print("KEY RETURNS: " + str(test))
         if test is not None:
             print("TEST SUCCESS: Config found successfully. Key is valid. \n")
-            os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
+            # os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
         else:
             print("TEST FAILED: Config not found. Given key is invalid. \n")
-            os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
+            # os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
 
         test = configClass.getConfig(key='invalid')
         print("KEY RETURNS: " + str(test))
@@ -65,7 +65,7 @@ class testReadConfig:
             print("TEST SUCCESS: Config not found. Key is invalid. \n")
         else:
             print("TEST FAILED: Config found successfully. Key is valid. \n")
-            os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
+            # os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
 
     def testShowConfig(self):
         """
@@ -85,10 +85,10 @@ class testReadConfig:
 
         if capturedOutput.getvalue().strip("\n") is expectedOutput:
             print("TEST SUCCESS: Print valid. \n")
-            os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
+            # os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
         else:
             print("TEST FAILED: Print invalid. \n")
-            os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
+            # os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
 
     def run(self):
         self.testInit()
