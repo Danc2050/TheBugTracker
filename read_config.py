@@ -27,13 +27,12 @@ class readConfig():
         Creates a new default config file from the user information
         provided.
 
-        param: user_info: 
+        param: user_info:
                 (PLACEHOLDER FOR FUTURE IMPL, I SEE IT BEING A STRUCT OR DICT)
 
         """
         if user_info is None:
-            name = dict(first="John", last="Doe")
-            rec = dict(name=name, email="johndoe@doe.com", placeholder1="",
+            rec = dict(first="John", last="Doe", email="johndoe@doe.com", placeholder1="",
                        placeholder2="", placeholder3="",
                        placeholder4="", placeholder5="")
             json.dump(rec, fp=open(self.configPath, 'w'), indent=4)
@@ -47,13 +46,12 @@ class readConfig():
 
     def getConfig(self, key=None):
         """
-        Returns a configuration value depending on the key 
+        Returns a configuration value depending on the key
         provided. If invalid key provided returns None.
-		(NOTE: Getting name key returns dict of first
-                                        and last name)
         *CURRENT VALID KEYS: name,email,placeholder1,placeholder2,
-							 placeholder3, placeholder4, placeholder5
+                                                         placeholder3, placeholder4, placeholder5
         param: key:config file Key
+        return: config key value
         """
         if not self.config is None:
             try:
@@ -61,3 +59,31 @@ class readConfig():
             except KeyError:
                 print("Invalid configuration key provided")
                 return None
+
+    def addToConfig(self, **kwargs):
+        """
+        addToConfig adds key/value pair entries to current loaded config
+
+        param: **kwargs: varied size key/value dict
+
+        EXAMPLE: **kwargs usage example: k = {'Download': True, 'UploadTime': 12, 'ValueName': 'Config1'}
+         																	addToConfig(**k)
+        """
+        if not kwargs is None:
+            if not self.config is None:
+                self.config = {**self.config,**kwargs}
+                json.dump(self.config, fp=open(self.configPath, 'w'), indent=4)
+
+    def changeConfigValue(self, key=None, value=None):
+        """
+				Changes the current configuration based on the key and value parameters
+
+				param: key: config key to change
+							 value: new config key's value
+				return: old config key value
+        """
+        if not self.getConfig(key) is None:
+            old_value = self.config[key]
+            self.config[key] = value
+            json.dump(self.config, fp=open(self.configPath, 'w'), indent=4)
+            return old_value
