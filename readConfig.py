@@ -32,8 +32,8 @@ class readConfig():
 
         """
         if user_info is None:
-            rec = dict(first="John", last="Doe", email="johndoe@doe.com", placeholder1="",
-                       placeholder2="", placeholder3="",
+            rec = dict(first="John", last="Doe", email="johndoe@doe.com", create_debug_log=True,
+                       overwrite_previous_entry=False, log_file="log.txt",
                        placeholder4="", placeholder5="")
             json.dump(rec, fp=open(self.configPath, 'w'), indent=4)
 
