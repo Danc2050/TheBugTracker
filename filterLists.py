@@ -1,6 +1,7 @@
-import pandas as pd
-import re
 from os import path
+import csv
+
+DELIMITER = '\n\n'      # individual bugs in each file would need to be separated by two new lines [YOU CAN CHANGE DELIMITER IF YOU WNAT]
 
 class filterBugReport():
     def __init__(self):
@@ -9,16 +10,18 @@ class filterBugReport():
             does not do anything if there is no files that exist
         """
         print("***Filtering bug reports with white/black lists***\n")
-        delimiter = '\n\n'      # individual bugs in each file would need to be separated by two new lines [YOU CAN CHANGE DELIMITER IF YOU WNAT]
         if path.exists("blacklist.txt"):
-            self.black_data = pd.read_csv('blacklist.txt', sep=delimiter,
-                                          header=None, engine='python')
+            blackfile = open("blacklist.txt", 'r')
+            self.black_data = blackfile.read().split(DELIMITER)
+            blackfile.close()
         if path.exists("whitelist.txt"):
-            self.white_data = pd.read_csv('whitelist.txt', sep=delimiter,
-                                          header=None, engine='python')
+            whitefile = open("whitelist.txt", 'r')
+            self.white_data = whitefile.read().split(DELIMITER)
+            whitefile.close()
         if path.exists("bug_report.txt"):
-            self.bugs = pd.read_csv('bug_report.txt', sep=delimiter,
-                                    header=None, engine='python')
+            bugfile = open("bug_report.txt", 'r')
+            self.bugs = bugfile.read().split(DELIMITER)
+            bugfile.close()
 
     def check_in_both(self):
         """
@@ -44,8 +47,8 @@ class filterBugReport():
         """
         if path.exists("bug_report.txt"):
             with open("bug_report.txt", 'w') as newBugReport:
-                for line in self.bugs:
-                    newBugReport.write(" ".join(line) + "\n")
+                writer = csv.writer(newBugReport, delimiter='\n')
+                writer.writerow(self.bugs)
 
     def run(self):
         """
