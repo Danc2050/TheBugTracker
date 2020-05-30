@@ -27,14 +27,13 @@ class readConfig():
         Creates a new default config file from the user information
         provided.
 
-        param: user_info: 
+        param: user_info:
                 (PLACEHOLDER FOR FUTURE IMPL, I SEE IT BEING A STRUCT OR DICT)
 
         """
         if user_info is None:
-            name = dict(first="John", last="Doe")
-            rec = dict(name=name, email="johndoe@doe.com", placeholder1="",
-                       placeholder2="", placeholder3="",
+            rec = dict(first="John", last="Doe", email="johndoe@doe.com", create_debug_log=True,
+                       overwrite_previous_entry=False, log_file="log.txt",
                        placeholder4="", placeholder5="")
             json.dump(rec, fp=open(self.configPath, 'w'), indent=4)
 
@@ -47,13 +46,13 @@ class readConfig():
 
     def getConfig(self, key=None):
         """
-        Returns a configuration value depending on the key 
+
+        Returns a configuration value depending on the key
         provided. If invalid key provided returns None.
-		(NOTE: Getting name key returns dict of first
-                                        and last name)
-        *CURRENT VALID KEYS: name,email,placeholder1,placeholder2,
-							 placeholder3, placeholder4, placeholder5
+        *CURRENT VALID KEYS: name,email,overwrite_previous_entry,create_debug_log,
+                                                         log_file, placeholder4, placeholder5
         param: key:config file Key
+        return: config key value
         """
         if not self.config is None:
             try:
