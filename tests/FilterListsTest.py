@@ -1,4 +1,4 @@
-from filterLists import *
+from src.FilterLists import *
 import os
 
 
