@@ -46,10 +46,11 @@ class readConfig():
 
     def getConfig(self, key=None):
         """
+
         Returns a configuration value depending on the key
         provided. If invalid key provided returns None.
-        *CURRENT VALID KEYS: name,email,placeholder1,placeholder2,
-                                                         placeholder3, placeholder4, placeholder5
+        *CURRENT VALID KEYS: name,email,overwrite_previous_entry,create_debug_log,
+                                                         log_file, placeholder4, placeholder5
         param: key:config file Key
         return: config key value
         """
@@ -59,31 +60,3 @@ class readConfig():
             except KeyError:
                 print("Invalid configuration key provided")
                 return None
-
-    def addToConfig(self, **kwargs):
-        """
-        addToConfig adds key/value pair entries to current loaded config
-
-        param: **kwargs: varied size key/value dict
-
-        EXAMPLE: **kwargs usage example: k = {'Download': True, 'UploadTime': 12, 'ValueName': 'Config1'}
-         																	addToConfig(**k)
-        """
-        if not kwargs is None:
-            if not self.config is None:
-                self.config = {**self.config,**kwargs}
-                json.dump(self.config, fp=open(self.configPath, 'w'), indent=4)
-
-    def changeConfigValue(self, key=None, value=None):
-        """
-				Changes the current configuration based on the key and value parameters
-
-				param: key: config key to change
-							 value: new config key's value
-				return: old config key value
-        """
-        if not self.getConfig(key) is None:
-            old_value = self.config[key]
-            self.config[key] = value
-            json.dump(self.config, fp=open(self.configPath, 'w'), indent=4)
-            return old_value
