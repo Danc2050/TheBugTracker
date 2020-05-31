@@ -49,7 +49,7 @@ class readConfig:
         Returns a configuration value depending on the key
         provided. If invalid key provided returns None.
         *CURRENT VALID KEYS: name,email,overwrite_previous_entry,create_debug_log,
-                             og_file, placeholder4, placeholder5
+                             log_file, placeholder4, placeholder5
         param: key:config file Key
         return: config key value
         """
