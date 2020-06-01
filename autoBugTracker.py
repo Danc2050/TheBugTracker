@@ -19,12 +19,14 @@ class autoBugTracker(object):
         return vars(arguments)
 
     def run(self):
-        '''' Return null
+        '''' Return list of traceback if the script did not exist gracefully
 
             it does sort functions of the class in logical order for execution.
         '''
         scriptName = self.parsingCommandLineArguments()['userscript']
-        self.execute.executeScript(scriptName)
+        execute = self.execute.executeScript(scriptName)
+        return execute if(type(execute) is list) else None
+        # return list of traceback to be included in user email
 
 
 if __name__ == '__main__':

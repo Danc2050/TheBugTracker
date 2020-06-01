@@ -5,9 +5,9 @@ import traceback
 class executeUserScript(object):
 
     def executeScript(self, scriptName):
-        ''' Return a null
+        ''' Return list of traceback stack
 
-            execute user script, takes one argument
+            execute user script, takes script to be execute as an argument
             either graceful execution or bug information such as capturing traceback
         '''
         try:
@@ -16,9 +16,8 @@ class executeUserScript(object):
             print(f'{scriptName} script is not found!')
         except ModuleNotFoundError as e:
             print(f'{e}, module is not found!')
-            #we can blacklist the script with missing module and notify user.
+            #Blacklist the script with missing module and notify user. Do not submit Bug!
         except:
             print(f'{scriptName} did not exit gracefully, Submit a Bug!"')
-            traceback.print_exc(file=sys.stdout)
-            # need to capture as much as helpful information about the issue
-            # for example: traceback to the triage team
+            #traceback.print_exc(file=sys.stdout)
+            return list(traceback.extract_stack())
