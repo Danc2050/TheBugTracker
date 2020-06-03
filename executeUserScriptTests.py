@@ -5,7 +5,7 @@ class testScript():
         print("testing")
 
     def testWorkingScript(self):
-        check = subprocess.check_output('executeUserScript.py -S workingTestScript.py', shell=True, text=True)
+        check = subprocess.check_output('ExecuteUserScript.py -S workingTestScript.py', shell=True, text=True)
         test = check.find('Traceback')
         if test == -1:
             print("Executed workingUserScript successfully. TEST PASSED")
@@ -13,7 +13,7 @@ class testScript():
             print("workingUserScript did not execute. TEST FAILED.")
 
     def testBrokenScript(self):
-        check = subprocess.check_output('executeUserScript.py -S brokenTestScript.py', shell=True, text=True)
+        check = subprocess.check_output('ExecuteUserScript.py -S brokenTestScript.py', shell=True, text=True)
         test = check.find('Traceback')
         if test != -1:
             print("Executed brokenTestScript and Traceback was found. TEST PASSED")
@@ -23,7 +23,7 @@ class testScript():
     def testCommandLine(self):
         try:
             print("Test executing workingUserScript without -S, should fail.")
-            subprocess.check_output('executeUserScript.py workingTestScript.py', shell=True, text=True, stderr=True)
+            subprocess.check_output('ExecuteUserScript.py workingTestScript.py', shell=True, text=True, stderr=True)
         except:
             print("test did fail without -S. TEST PASSED")
             return

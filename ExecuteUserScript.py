@@ -1,7 +1,7 @@
 import traceback
 
 
-class executeUserScript(object):
+class ExecuteUserScript(object):
 
     def executeScript(self, scriptName):
         ''' Return list of traceback stack

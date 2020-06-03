@@ -1,11 +1,11 @@
 import argparse
-import executeUserScript
+import ExecuteUserScript
 
 
-class autoBugTracker(object):
+class AutoBugTracker(object):
     def __init__(self):
         print("***Auto Bug Tracker***\n")
-        self.execute = executeUserScript.executeUserScript()
+        self.execute = ExecuteUserScript.ExecuteUserScript()
 
 
     def parsingCommandLineArguments(self):
@@ -30,5 +30,5 @@ class autoBugTracker(object):
 
 
 if __name__ == '__main__':
-    execute = autoBugTracker()
+    execute = AutoBugTracker()
     execute.run()
