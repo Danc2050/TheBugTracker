@@ -1,20 +1,17 @@
-from debugLogFile import *
-import os
-import io
-import sys
+from src.DebugLogFile import *
 
 message1 = "\n[This is a placeholder for when a new file is created for the debug log file]"
 message2 = "\n[append this message to existing file]"
 message3 = "\n[This message is to overwrite the existing file]"
 
 
-class testdebugLogFile():
+class DebugLogTest:
     def test(self):
         test = debugLogFile()
-        test.writeToFile(message2)
+        test.writeToFile(message1)
 
 
 if __name__ == '__main__':
-    test_run = testdebugLogFile()
+    test_run = DebugLogTest()
     test_run.test()
 
