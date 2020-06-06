@@ -1,37 +1,43 @@
-import pandas as pd
-import re
 from os import path
+import csv
 
-class filterBugReport():
+# individual bugs in each file would need to be separated by two new lines [YOU CAN CHANGE DELIMITER IF YOU WANT]
+
+DELIMITER = '\n\n'
+
+
+class filterBugReport:
     def __init__(self):
         """
-            put contents of blackfile, whitefile, and bug report into arrays/columns according to delimiter (???)
-            does not do anything if there is no files that exist
+        put contents of blackfile, whitefile, and bug report into arrays/columns according to delimiter (???)
+        does not do anything if there is no files that exist
         """
         print("***Filtering bug reports with white/black lists***\n")
-        delimiter = '\n\n'      # individual bugs in each file would need to be separated by two new lines [YOU CAN CHANGE DELIMITER IF YOU WNAT]
         if path.exists("blacklist.txt"):
-            self.black_data = pd.read_csv('blacklist.txt', sep=delimiter,
-                                          header=None, engine='python')
+            blackfile = open("blacklist.txt", 'r')
+            self.black_data = blackfile.read().split(DELIMITER)
+            blackfile.close()
         if path.exists("whitelist.txt"):
-            self.white_data = pd.read_csv('whitelist.txt', sep=delimiter,
-                                          header=None, engine='python')
+            whitefile = open("whitelist.txt", 'r')
+            self.white_data = whitefile.read().split(DELIMITER)
+            whitefile.close()
         if path.exists("bug_report.txt"):
-            self.bugs = pd.read_csv('bug_report.txt', sep=delimiter,
-                                    header=None, engine='python')
+            bugfile = open("bug_report.txt", 'r')
+            self.bugs = bugfile.read().split(DELIMITER)
+            bugfile.close()
 
     def check_in_both(self):
         """
-            check if item in whitelist appears in blacklist before any filtering process
-            raise exception if subset is found
+        check if item in whitelist appears in blacklist before any filtering process
+        raise exception if subset is found
         """
         if set(self.white_data).issubset(self.black_data):
             raise Exception("WARNING: Whitelist content also appears in Blacklist content")
 
     def filter_process(self):
         """
-            remove item in bug report that appears in blacklist
-            add item in whitelist to bug report (NO DUPLICATES)
+        remove item in bug report that appears in blacklist
+        add item in whitelist to bug report (NO DUPLICATES)
         """
         self.bugs = [item for item in self.bugs if item not in self.black_data]
         for item in self.white_data:
@@ -40,16 +46,16 @@ class filterBugReport():
 
     def create_new_report(self):
         """
-            create a new bug report array after filtering process
+        create a new bug report array after filtering process
         """
         if path.exists("bug_report.txt"):
             with open("bug_report.txt", 'w') as newBugReport:
-                for line in self.bugs:
-                    newBugReport.write(" ".join(line) + "\n")
+                writer = csv.writer(newBugReport, delimiter='\n')
+                writer.writerow(self.bugs)
 
     def run(self):
         """
-            executes functions in logical order
+        executes functions in logical order
         """
         self.check_in_both()
         self.filter_process()

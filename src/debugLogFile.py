@@ -1,5 +1,5 @@
 import os
-import read_config as readConfig
+from src.ReadConfig import readConfig
 import logging
 from datetime import date
 
@@ -10,9 +10,9 @@ class debugLogFile:
 
     def writeToFile(self, message):
         try:
-            createDebugFlag = readConfig.readConfig().getConfig("create_debug_log")
-            overwriteFileFlag = readConfig.readConfig().getConfig("overwrite_previous_entry")
-            fileToWrite = readConfig.readConfig().getConfig("log_file")
+            createDebugFlag = readConfig().getConfig("create_debug_log")
+            overwriteFileFlag = readConfig().getConfig("overwrite_previous_entry")
+            fileToWrite = readConfig().getConfig("log_file")
             if createDebugFlag.upper() == "TRUE":
                 if overwriteFileFlag.upper() == "TRUE":
                     if os.path.isfile(self.newFile):
