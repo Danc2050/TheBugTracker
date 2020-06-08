@@ -10,12 +10,16 @@ class GithubIntegration:
         """
         self.githubAccessToken = githubAccessToken
         self.repoName = githubRepo
-        self.github = Github(self.githubAccessToken)
-        self.githubRepo = self.github.get_repo(self.repoName)
+        try:
+            self.github = Github(self.githubAccessToken)
+            self.githubRepo = self.github.get_repo(self.repoName)
+        except Exception as e:
+            raise Exception("Unable to authenticate access token or find github repo " + str(e))
 
     def closeIssue(self, issueNumber):
         """
-        Closes an open issue
+        Close an open issue
+
         :param issueNumber: The id corresponding to an issue
         :return: An exception if an error occurs while closing
         """
@@ -64,6 +68,7 @@ class GithubIntegration:
     def createIssue(self, githubIssue):
         """
         Creates an issue to the given repo
+
         :param githubIssue: The github issue object to send to github
         :return: The created issue's information
         """
