@@ -1,14 +1,13 @@
 import os
-from src.ReadConfig import readConfig
 import logging
 from datetime import date
 
 
 class DebugLogFile:
-    def __init__(self):
-        self.createDebugFlag = readConfig().getConfig("create_debug_log")
-        self.overwriteFileFlag = readConfig().getConfig("overwrite_previous_entry")
-        self.fileToWrite = readConfig().getConfig("log_file")
+    def __init__(self, configOptions):
+        self.createDebugFlag = configOptions.getConfig("create_debug_log")
+        self.overwriteFileFlag = configOptions.getConfig("overwrite_previous_entry")
+        self.fileToWrite = configOptions.getConfig("log_file")
         self.newFile = str(date.today()) + "_debugLogFile.txt"
 
     def writeToFile(self, message):

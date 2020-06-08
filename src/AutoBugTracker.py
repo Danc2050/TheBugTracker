@@ -10,7 +10,7 @@ class AutoBugTracker(object):
         print("***Auto Bug Tracker***\n")
         # Gets configuration file, if non existent it will create one
         self.configOptions = readConfig.readConfig()
-        self.logs = debugLogFile.DebugLogFile()
+        self.logs = debugLogFile.DebugLogFile(self.configOptions)
         self.execute = ExecuteUserScript.ExecuteUserScript()
 
     def parsingCommandLineArguments(self):
