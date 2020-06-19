@@ -13,16 +13,16 @@ class filterBugReport:
         does not do anything if there is no files that exist
         """
         print("***Filtering bug reports with white/black lists***\n")
-        if path.exists("blacklist.txt"):
-            blackfile = open("blacklist.txt", 'r')
+        if path.exists("black.list"):
+            blackfile = open("black.list", 'r')
             self.black_data = blackfile.read().split(DELIMITER)
             blackfile.close()
-        if path.exists("whitelist.txt"):
-            whitefile = open("whitelist.txt", 'r')
+        if path.exists("white.list"):
+            whitefile = open("white.list", 'r')
             self.white_data = whitefile.read().split(DELIMITER)
             whitefile.close()
-        if path.exists("bug_report.txt"):
-            bugfile = open("bug_report.txt", 'r')
+        if path.exists("bugs.list"):
+            bugfile = open("bugs.list", 'r')
             self.bugs = bugfile.read().split(DELIMITER)
             bugfile.close()
 
@@ -48,8 +48,8 @@ class filterBugReport:
         """
         create a new bug report array after filtering process
         """
-        if path.exists("bug_report.txt"):
-            with open("bug_report.txt", 'w') as newBugReport:
+        if path.exists("bugs.list"):
+            with open("bugs.list", 'w') as newBugReport:
                 writer = csv.writer(newBugReport, delimiter='\n')
                 writer.writerow(self.bugs)
 
