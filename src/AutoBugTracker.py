@@ -3,15 +3,20 @@ import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
 import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
+import src.InitializeDatabaseScript as initializeDatabaseScript
 
 
 class AutoBugTracker(object):
     def __init__(self):
         print("***Auto Bug Tracker***\n")
+        # Initialize database
+        self.database = initializeDatabaseScript.Database()
+        self.dbInitialized = False
         # Gets configuration file, if non existent it will create one
         self.configOptions = readConfig.readConfig()
         self.logs = debugLogFile.DebugLogFile(self.configOptions)
         self.execute = ExecuteUserScript.ExecuteUserScript()
+        self.github = None
 
     def parsingCommandLineArguments(self):
         """
@@ -44,14 +49,34 @@ class AutoBugTracker(object):
                 except Exception as e:
                     self.logs.writeToFile(str(e))
 
+    def databaseConfiguration(self):
+        """
+        Connects to the postgres server that has the projects database. Then connects to that database.
+
+        :return: Database initialized
+        """
+        if not self.dbInitialized:
+            try:
+                self.database.connect(server_params="postgres_server")
+                self.database.create_database(database_params="postgres_db")
+                self.database.create_table(table_name="Bugs")
+            except Exception as e:
+                self.logs.writeToFile(str(e))
+                return False
+
+            return True
+    def initialization(self):
+        # Initialize and connect to database
+        self.dbInitialized = self.databaseConfiguration()
+        # Initialize project with github
+        self.github = self.githubConfiguration()
+
     def run(self):
         """
         Return list of traceback if the script did not exist gracefully
 
         it does sort functions of the class in logical order for execution.
         """
-        # Initialize project with github
-        github = self.githubConfiguration()
         scriptName = self.parsingCommandLineArguments()['userScript']
         traceBackOfParentProgram = self.execute.executeScript(scriptName)
         # return list of traceback to be included in user email
@@ -60,4 +85,5 @@ class AutoBugTracker(object):
 
 if __name__ == '__main__':
     execute = AutoBugTracker()
+    execute.initialization()
     execute.run()

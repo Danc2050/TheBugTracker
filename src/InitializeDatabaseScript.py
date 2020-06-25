@@ -1,6 +1,7 @@
 import psycopg2
 import src.DBConfig as config
 import src.DebugLogFile as Dfl
+import src.ReadConfig as readConfig
 
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
@@ -11,28 +12,32 @@ class Database:
         self.database_params = None
         self.db_cursor = None
         self.db_name = None
-        self.bug_table_name = "Bugs"
-        self. debugLogFile = Dfl.debugLogFile()
+        self.bug_table_name = None
+        self.debugConfigOptions = readConfig.readConfig()
+        self. debugLogFile = Dfl.DebugLogFile(self.debugConfigOptions)
 
     # Open a connection to the host server that the database is stored on.
-    def connect(self):
+    def connect(self, server_params):
+        """
+        Connects to the postgres server that has the bug tracker database on it.
+        If an invalid key is provided then a connection will not be made.
+
+        :param server_params: config file key
+        :return:
+        """
         try:
             # Get the server params from Database.ini
-            params = config.config('postgres_server')
+            params = config.config(server_params)
             # Create a connection to the posgresql database server
             self.db_server_conn = psycopg2.connect(**params)
 
             self.db_cursor = self.db_server_conn.cursor()
             # Print PostgreSQL Connection properties
-            print(self.db_server_conn.get_dsn_parameters(), "\n")
+            # print(self.db_server_conn.get_dsn_parameters(), "\n")
 
-            # Print PostgreSQL version
-            # possibly do not need class based cursor so this might need to be removed.
-            # TODO
-
-            self.db_cursor.execute("SELECT version();")
-            record = self.db_cursor.fetchone()
-            print("You are connected to - ", record, "\n")
+            # self.db_cursor.execute("SELECT version();")
+            # record = self.db_cursor.fetchone()
+            # print("You are connected to - ", record, "\n")
 
         except (Exception, psycopg2.Error) as e:
             self.debugLogFile.writeToFile("Error while connecting to PostgreSQL " + str(e))
@@ -49,10 +54,10 @@ class Database:
             self.db_server_conn.close()
             print("PostgreSQL connection is closed")
 
-    def create_database(self):
+    def create_database(self, database_params):
         if self.db_server_conn:
             try:
-                self.database_params = config.config('postgres_db')
+                self.database_params = config.config(database_params)
                 self.db_server_conn.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
                 database_name = self.database_params.get('database')
                 sqlCreateDatabase = "create database " + database_name + ""
@@ -61,10 +66,11 @@ class Database:
             except (Exception, psycopg2.Error) as e:
                 self.debugLogFile.writeToFile("Could not create Database " + str(e))
 
-    def create_table(self):
+    def create_table(self, table_name):
         # need to connect to the database that I am actually creating the table in.
         conn = None
         cursor = None
+        self.bug_table_name = table_name
         try:
             # connect to the database on the postgres server.
             conn = psycopg2.connect(**self.database_params)
@@ -75,12 +81,12 @@ class Database:
             # self.bug_table_name =
 
             # basic Table
-            table = ("CREATE TABLE " + self.bug_table_name + """ (
-                        bug_title text NULL,
-                        bug_description text NULL,
-                        bug_traceback_info text NULL,
-                        bug_resolved BOOL NULL,
-                        PRIMARY KEY (bug_title)
+            table = ("CREATE TABLE " + table_name + """ (
+                        Title text NULL,
+                        Description text NULL,
+                        Traceback_info text NULL,
+                        Resolved BOOL NULL,
+                        PRIMARY KEY (Title)
                         ); """)
             # execute the sql query
             cursor.execute(table)
@@ -102,15 +108,11 @@ class Database:
         try:
             conn = psycopg2.connect(**self.database_params)
             cursor = conn.cursor()
-            # sql_values = []
-            # for item in bug_record:
-                # sql_values.append(item)
-            # insert_values = (bug_record[0], bug, "traceback info test", False)
             insert_query = (" INSERT INTO " + self.bug_table_name + """(
-                            bug_title, 
-                            bug_description, 
-                            bug_traceback_info, 
-                            bug_resolved) 
+                            Title, 
+                            Description, 
+                            Traceback_info, 
+                            Resolved) 
                             VALUES (%s, %s, %s, %s) """)
 
             cursor.execute(insert_query, bug_record)
@@ -138,9 +140,9 @@ class Database:
             # When a bug is updated it means that it has been resolved so the bug_resolve flag is switched
             # from false to true.
             sql_update_query = (" UPDATE " + self.bug_table_name + """
-                                SET bug_resolved = True
-                                WHERE bug_resolved = %s
-                                AND bug_title = %s """)
+                                SET Resolved = True
+                                WHERE Resolved = %s
+                                AND Title = %s """)
 
             update_values = (False, title)
             cursor.execute(sql_update_query, update_values)
@@ -165,7 +167,7 @@ class Database:
             cursor = conn.cursor()
 
             sql_retrieve_query = ("SELECT * from " + self.bug_table_name + """
-                                WHERE bug_title = %s """)
+                                WHERE Title = %s """)
 
             # record_name has to be a tuple or list to convert properly to execute the query.
             sql_query_values = (title,)
