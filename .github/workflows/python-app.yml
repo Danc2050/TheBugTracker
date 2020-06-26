@@ -23,8 +23,11 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 PyGithub
+        pip install flake8 psycopg2 PyGithub
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
     - name: Lint with flake8
       run: | 
         flake8 . --exclude='tests/BrokenTestScript.py' --count --select=E9,F63,F7,F82 --show-source --statistics --ignore=E999 --max-line-length=127 --count --exit-zero --max-complexity=10 --statistics
+    - name: Docker
+      run: |
+        docker run --rm --name test-db -e POSTGRES_PASSWORD=my_secret_password -d -p 5432:5432 postgres

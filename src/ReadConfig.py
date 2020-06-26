@@ -18,7 +18,7 @@ class readConfig:
                     self.configPath))
             self.config = json.load(open(self.configPath, 'r'))
         except Exception as e:
-            print("Unable to load  config file".format())
+            print("Unable to load config file".format())
             raise e
 
     def createDefault(self, user_info=None):
@@ -50,7 +50,8 @@ class readConfig:
         Returns a configuration value depending on the key
         provided. If invalid key provided returns None.
         *CURRENT VALID KEYS: name,email,overwrite_previous_entry,create_debug_log,
-                             log_file, placeholder4, placeholder5
+                             log_file, github_integration, github_access_token,
+                             github_repo_name
         param: key:config file Key
         return: config key value
         """
