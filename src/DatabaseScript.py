@@ -30,20 +30,9 @@ class Database:
             params = config.config(server_params)
             # Create a connection to the posgresql database server
             self.db_server_conn = psycopg2.connect(**params)
-
             self.db_cursor = self.db_server_conn.cursor()
-            # Print PostgreSQL Connection properties
-            # print(self.db_server_conn.get_dsn_parameters(), "\n")
-
-            # self.db_cursor.execute("SELECT version();")
-            # record = self.db_cursor.fetchone()
-            # print("You are connected to - ", record, "\n")
-
         except (Exception, psycopg2.Error) as e:
             self.debugLogFile.writeToFile("Error while connecting to PostgreSQL " + str(e))
-            # raise Exception("Error while connecting to PostgreSQL " + str(e))
-
-            # print("Error while connecting to PostgreSQL", error)
 
     # Disconnect is its own function so that the connection to the
     # databases server can remain open while the database and table are being
@@ -74,12 +63,9 @@ class Database:
         try:
             # connect to the database on the postgres server.
             conn = psycopg2.connect(**self.database_params)
-            # conn = self.database_connect()
             # once we are connected to the database that we created on the postgreSQL server
             # we can create a table in that database.
             cursor = conn.cursor()
-            # self.bug_table_name =
-
             # basic Table
             table = ("CREATE TABLE " + table_name + """ (
                         Title text NULL,
@@ -117,9 +103,6 @@ class Database:
 
             cursor.execute(insert_query, bug_record)
             conn.commit()
-            # count = cursor.rowcount
-            # print(count, "Record inserted successfully into table.")
-
         except (Exception, psycopg2.Error) as e:
             self.debugLogFile.writeToFile("Could not insert record into table " + str(e))
 
@@ -187,17 +170,3 @@ class Database:
             if conn:
                 cursor.close()
                 conn.close()
-
-    # This will list all the database on the postgresql server.
-    def list_dbs(self):
-        if self.db_server_conn:
-            self.db_cursor.execute("""SELECT d.datname as "Name",
-                pg_catalog.pg_get_userbyid(d.datdba) as "Owner",
-                pg_catalog.pg_encoding_to_char(d.encoding) as "Encoding",
-                d.datcollate as "Collate",
-                d.datctype as "Ctype",
-                pg_catalog.array_to_string(d.datacl, E'\n') AS "Access privileges"
-                FROM pg_catalog.pg_database d
-                ORDER BY 1;""")
-            for datname in self.db_cursor:
-                print(datname)

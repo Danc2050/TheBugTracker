@@ -3,7 +3,7 @@ import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
 import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
-import src.InitializeDatabaseScript as initializeDatabaseScript
+import src.DatabaseScript as initializeDatabaseScript
 
 
 class AutoBugTracker(object):
@@ -65,6 +65,7 @@ class AutoBugTracker(object):
                 return False
 
             return True
+
     def initialization(self):
         # Initialize and connect to database
         self.dbInitialized = self.databaseConfiguration()
