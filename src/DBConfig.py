@@ -2,7 +2,7 @@ from configparser import ConfigParser
 
 
 def config(section):
-    filename = 'src\Database.ini'
+    filename = '../src/Database.ini'
     parser = ConfigParser()
     parser.read(filename)
 

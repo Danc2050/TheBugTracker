@@ -1,4 +1,4 @@
-import src.InitializeDatabaseScript as DB
+import src.DatabaseScript as DB
 
 
 if __name__ == "__main__":
