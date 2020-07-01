@@ -1,3 +1,7 @@
+/.idea/
+/__pycache__ /
+.idea
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -142,3 +146,4 @@ cython_debug/
 #idea files
 .idea/
 *.txt
+/python/
