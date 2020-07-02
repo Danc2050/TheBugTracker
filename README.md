@@ -1,5 +1,5 @@
 # Autobug
-> Updated: 6/29/2020
+> Updated: 7/1/2020
 
 ## Contents
 * [Description](#description)
