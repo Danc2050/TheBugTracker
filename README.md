@@ -29,14 +29,14 @@ AutoBugTracker is valuable to developers of a variety of team sizes with an emph
 
 ## Instructions
 ### Installation
-Currently the AutoBugTracker repository can be [cloned](https://github.com/ismustachio/TheBugTracker.git).
+Currently the AutoBugTracker repository can be [cloned](https://github.com/ismustachio/TheBugTracker.git).\
 _Eventually we would like to setup a pip package._
 
 ### Usage
 AutoBugTracker can be run by using the command `python3 AutoBugTracker.py client-program`
 
-Database Name: `bug_tracker`
-Database Username: `postgres`
+Database Name: `bug_tracker`\
+Database Username: `postgres`\
 Database Password: `my_secret_password`
 
 ## Features
@@ -63,7 +63,7 @@ Database Password: `my_secret_password`
 
 ## Contributors
 ### Product Owners / Sponsors
-> [Daniel Connelly](https://www.linkedin.com/in/dconnelly2/)
+> [Daniel Connelly](https://www.linkedin.com/in/dconnelly2/)\
 > [Teal Dulcet](https://www.tealdulcet.com/)
 
 ### Development Team
@@ -71,9 +71,9 @@ Database Password: `my_secret_password`
 > Antonio DiMaggio
 
 #### Software Engineers
-> Ryan Campbell
-> Ramon Guarnes
-> Dana Khoshnaw
-> Princess Kim
-> Armando Lajara
+> Ryan Campbell\
+> Ramon Guarnes\
+> Dana Khoshnaw\
+> Princess Kim\
+> Armando Lajara\
 > Mahmoud Al Robiai
