@@ -1,11 +1,11 @@
-# Autobug
+# AutoBugTracker
 > Updated: 7/1/2020
 
 ## Contents
 * [Description](#description)
-	* [What is Autobug?](#what-is-autobug)
-	* [Why use Autobug?](#why-use-autobug)
-	* [Who should use Autobug?](#who-should-use-autobug)
+	* [What is AutoBugTracker?](#what-is-autobugtracker)
+	* [Why use AutoBugTracker?](#why-use-autobugtracker)
+	* [Who should use AutoBugTracker?](#who-should-use-autobugtracker)
 * [Instructions](#instructions)
 	* [Installation](#installation)
 	* [Usage](#usage)
@@ -18,23 +18,22 @@
 	* [Development Team](#development-team)
 
 ## Description
-### What is Autobug?
-Autobug is a python program that executes a client program and reports any bugs it encounters to a server, it then filters, records, and reports the bugs to Github. Autobug utilizes a PostgreSQL database to help keep things organized and keeps team members updated on the status of bugs via email.
+### What is AutoBugTracker?
+AutoBugTracker is a python program that executes a client program and reports any bugs it encounters to a server, it then filters, records, and reports the bugs to Github. AutoBugTracker utilizes a PostgreSQL database to help keep things organized and keeps team members updated on the status of bugs via email.
 
-### Why use Autobug?
-Autobug facilitates an efficient workflow for programmers, making it a great addition to any development suite.
+### Why use AutoBugTracker?
+AutoBugTracker facilitates an efficient workflow for programmers, making it a great addition to any development suite.
 
-### Who should use Autobug?
-Autobug is valuable to developers of a variety of team sizes with an emphasis on solo devs and small teams. Regardless of team size, Autobug is highley configurable and can be tailored for your specific needs.
+### Who should use AutoBugTracker?
+AutoBugTracker is valuable to developers of a variety of team sizes with an emphasis on solo devs and small teams. Regardless of team size, AutoBugTracker is highley configurable and can be tailored for your specific needs.
 
 ## Instructions
 ### Installation
-Currently the Autobug repository can be [cloned](https://github.com/ismustachio/TheBugTracker.git).
+Currently the AutoBugTracker repository can be [cloned](https://github.com/ismustachio/TheBugTracker.git).
 _Eventually we would like to setup a pip package._
 
 ### Usage
-Autobug can be run by using the command `python3 AutoBugTracker.py client-program`
-
+AutoBugTracker can be run by using the command `python3 AutoBugTracker.py client-program`
 
 Database Name: `bug_tracker`
 Database Username: `postgres`
@@ -72,9 +71,9 @@ Database Password: `my_secret_password`
 > Antonio DiMaggio
 
 #### Software Engineers
-> Princess Kim
-> Dana Khoshnaw
-> Ramon Guarnes
 > Ryan Campbell
-> Mahmoud Al Robiai
+> Ramon Guarnes
+> Dana Khoshnaw
+> Princess Kim
 > Armando Lajara
+> Mahmoud Al Robiai
