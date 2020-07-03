@@ -80,10 +80,9 @@ class testReadConfig:
         sys.stdout = sys.__stdout__
 
         expectedOutput = "{'first': 'John', 'last': 'Doe', 'email': 'johndoe@doe.com', 'create_debug_log': True, " \
-                         "'overwrite_previous_entry': False, 'log_file': 'log.txt', 'placeholder4': '', " \
-                         "'placeholder5': ''}"
-
-        if capturedOutput.getvalue().strip("\n") is expectedOutput:
+                         "'overwrite_previous_entry': False, 'log_file': 'log.txt', 'github_integration': False, " \
+                         "'github_access_token': '', 'github_repo_name': ''}"
+        if capturedOutput.getvalue().strip("\n") == expectedOutput:
             print("TEST SUCCESS: Print valid. \n")
             # os.remove(Path(os.path.join(Path.home(), BUGTRACKER)))
         else:
