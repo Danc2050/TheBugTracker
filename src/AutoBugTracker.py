@@ -5,6 +5,7 @@ import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
 import src.DatabaseScript as initializeDatabaseScript
 import src.EmailUsers as emailUsers
+from decouple import config
 
 class AutoBugTracker(object):
     def __init__(self):
@@ -17,7 +18,7 @@ class AutoBugTracker(object):
         self.logs = debugLogFile.DebugLogFile(self.configOptions)
         self.execute = ExecuteUserScript.ExecuteUserScript()
         self.github = None
-        self.email = emailUsers.EmailUsers()
+        self.email = None
 
     def parsingCommandLineArguments(self):
         """
@@ -67,30 +68,36 @@ class AutoBugTracker(object):
 
             return True
 
-    def sendEmail(self, body,):
+    def emailConfiguration(self):
         """
         Initializes data to email specified user(s). body of report passed to this function.
 
         :return: email sent
         """
+        username = config('USER')
+        password = config('KEY')
+        try:
+            return emailUsers.EmailUsers(username, password)
+        except Exception as e:
+            raise Exception(str(e))
+
+    def sendEmail(self, body):
         first = self.configOptions.getConfig(key='first')
         last = self.configOptions.getConfig(key='last')
         email = self.configOptions.getConfig(key='email')
-        subject = "AutoBugTracker Report: " + first + last
+        subject = ("AutoBugTracker Report: " + str(first) + str(last))
         try:
             self.email.send_email(body, subject, email)
         except Exception as e:
             self.logs.writeToFile(str(e))
-            return False
-        return True
-
-
 
     def initialization(self):
         # Initialize and connect to database
         self.dbInitialized = self.databaseConfiguration()
         # Initialize project with github
         self.github = self.githubConfiguration()
+        # Initialize email information
+        self.email = self.emailConfiguration()
 
     def run(self):
         """
@@ -102,8 +109,7 @@ class AutoBugTracker(object):
         traceBackOfParentProgram = self.execute.executeScript(scriptName)
         # return list of traceback to be included in user email
         # return execute if (type(execute) is list) else None
-        if self.configOptions.getConfig(key='get_notifications'):
-            self.sendEmail("test body")
+        self.sendEmail(traceBackOfParentProgram)
 
 
 if __name__ == '__main__':
