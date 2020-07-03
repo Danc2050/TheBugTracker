@@ -16,10 +16,10 @@ class EmailUsers:
                    to_send):
         try:
             self.yag.send(to_send, subject, body)
-        except yagmail.error.YagAddressError:
-            print("Address given is in an invalid format")
-        except yagmail.error.YagInvalidEmailAddress:
-            print("Email address does not exist")
+        except yagmail.error.YagAddressError as e:
+            print("Address given is in an invalid format with exception: " + str(e))
+        except yagmail.error.YagInvalidEmailAddress as e:
+            print("Email address does not exist. exception: " + str(e))
 
     # sends email to self
     def email_self(self,
@@ -27,7 +27,7 @@ class EmailUsers:
                    subject):
         try:
             self.yag.send(contents=[body], subject=[subject])
-        except TypeError:
-            print("Type mismatch. Contents may be a string, dictionary, file, or HTML")
+        except TypeError as e:
+            print("Type mismatch. Contents may be a string, dictionary, file, or HTML. exception: " + str(e))
 
 

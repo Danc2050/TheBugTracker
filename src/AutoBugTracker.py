@@ -4,7 +4,7 @@ import src.GithubIntegration as githubIntegration
 import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
 import src.DatabaseScript as initializeDatabaseScript
-
+import src.EmailUsers as emailUsers
 
 class AutoBugTracker(object):
     def __init__(self):
@@ -17,6 +17,7 @@ class AutoBugTracker(object):
         self.logs = debugLogFile.DebugLogFile(self.configOptions)
         self.execute = ExecuteUserScript.ExecuteUserScript()
         self.github = None
+        self.email = emailUsers.EmailUsers()
 
     def parsingCommandLineArguments(self):
         """
@@ -66,6 +67,25 @@ class AutoBugTracker(object):
 
             return True
 
+    def sendEmail(self, body,):
+        """
+        Initializes data to email specified user(s). body of report passed to this function.
+
+        :return: email sent
+        """
+        first = self.configOptions.getConfig(key='first')
+        last = self.configOptions.getConfig(key='last')
+        email = self.configOptions.getConfig(key='email')
+        subject = "AutoBugTracker Report: " + first + last
+        try:
+            self.email.send_email(body, subject, email)
+        except Exception as e:
+            self.logs.writeToFile(str(e))
+            return False
+        return True
+
+
+
     def initialization(self):
         # Initialize and connect to database
         self.dbInitialized = self.databaseConfiguration()
@@ -82,6 +102,8 @@ class AutoBugTracker(object):
         traceBackOfParentProgram = self.execute.executeScript(scriptName)
         # return list of traceback to be included in user email
         # return execute if (type(execute) is list) else None
+        if self.configOptions.getConfig(key='get_notifications'):
+            self.sendEmail("test body")
 
 
 if __name__ == '__main__':
