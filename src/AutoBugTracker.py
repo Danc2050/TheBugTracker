@@ -1,11 +1,12 @@
 import argparse
+import os
 import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
 import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
 import src.DatabaseScript as initializeDatabaseScript
 import src.EmailUsers as emailUsers
-from decouple import config
+
 
 
 class AutoBugTracker(object):
@@ -75,8 +76,8 @@ class AutoBugTracker(object):
 
         :return: email sent
         """
-        username = config('USER')
-        password = config('KEY')
+        username = os.environ['USERNAME']
+        password = os.environ['PASSWORD']
         try:
             return emailUsers.EmailUsers(username, password)
         except Exception as e:
