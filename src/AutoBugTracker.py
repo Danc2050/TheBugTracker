@@ -7,6 +7,7 @@ import src.DatabaseScript as initializeDatabaseScript
 import src.EmailUsers as emailUsers
 from decouple import config
 
+
 class AutoBugTracker(object):
     def __init__(self):
         print("***Auto Bug Tracker***\n")
@@ -16,7 +17,7 @@ class AutoBugTracker(object):
         # Gets configuration file, if non existent it will create one
         self.configOptions = readConfig.readConfig()
         self.logs = debugLogFile.DebugLogFile(self.configOptions)
-        self.execute = ExecuteUserScript.ExecuteUserScript()
+        self.execute = ExecuteUserScript.ExecuteUserScript(self.configOptions, self.logs)
         self.github = None
         self.email = None
 
@@ -105,11 +106,12 @@ class AutoBugTracker(object):
 
         it does sort functions of the class in logical order for execution.
         """
+        github = self.githubConfiguration()
         scriptName = self.parsingCommandLineArguments()['userScript']
         traceBackOfParentProgram = self.execute.executeScript(scriptName)
-        # return list of traceback to be included in user email
-        # return execute if (type(execute) is list) else None
-        self.sendEmail(traceBackOfParentProgram)
+        if (type(traceBackOfParentProgram) is list):
+            self.database.list_insert(("", "", traceBackOfParentProgram, False))
+            self.sendEmail(traceBackOfParentProgram)
 
 
 if __name__ == '__main__':
