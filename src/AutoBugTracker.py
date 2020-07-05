@@ -97,21 +97,10 @@ class AutoBugTracker(object):
 
     def run(self):
         """
-        Return list of traceback if the script did not exist gracefully
-
-        it does sort functions of the class in logical order for execution.
+        Listen to invoked script for any bugs to report
         """
         scriptName = self.parsingCommandLineArguments()['userScript']
-        traceBackOfParentProgram = self.execute.executeScript(scriptName)
-        if type(traceBackOfParentProgram) is list:
-            self.issueBugreport(traceBackOfParentProgram)
-
-    def listenRun(self):
-        """
-        Listen to invoke script for any bugs to report
-        """
-        scriptName = self.parsingCommandLineArguments()['userScript']
-        process = self.execute.liveExecuteScript(scriptName)
+        process = self.execute.listenExecuteScript(scriptName)
         if type(process) is not list and type(process) is not str(process):
             while process.poll is None:
                 _, err = process.communicate()
