@@ -1,5 +1,6 @@
 import sys
 import traceback
+import subprocess
 
 
 class ExecuteUserScript(object):
@@ -20,7 +21,7 @@ class ExecuteUserScript(object):
             sys.last_value = value
             sys.last_traceback = tb
             tblist = traceback.extract_tb(tb)
-            del tblist[:1] # removing AutoBugTracker stack line
+            del tblist[:1]  # removing AutoBugTracker stack line
             tracebackList = traceback.format_list(tblist)
             if tracebackList:
                 tracebackList.insert(0, "Traceback (most recent call last):\n")
@@ -44,10 +45,33 @@ class ExecuteUserScript(object):
         except FileNotFoundError:
             print(f'{scriptName} script is not found!')
             self.logs.writeToFile(message=self.captureTraceback())
+            return 'script is not found'
         except ModuleNotFoundError as e:
             print(f'{e}, module is not found!')
             self.logs.writeToFile(message=self.captureTraceback())
             # Blacklist the script with missing module and notify user. Do not submit Bug!
+            return 'module not found'
         except:
             print(f'{scriptName} did not exit gracefully, Submit a Bug!"')
             return self.captureTraceback()
+
+    def liveExecuteScript(self, scriptName):
+        """
+        returns the script as a child process
+        """
+        p = subprocess.Popen([scriptName], stderr=subprocess.PIPE, stdout=subprocess.PIPE, stdin=subprocess.PIPE,
+                             shell=True)
+        _, err = p.communicate()
+        errors = str(err).split('\\n')  # err is raw string
+        if str(err).find("ModuleNotFoundError:") != -1:
+            print(f'{scriptName}, module is not found!')
+            self.logs.writeToFile(message=errors)
+            return 'module is not found'
+        elif p.returncode == 127:
+            print(f'{scriptName} script is not found!')
+            self.logs.writeToFile(message=errors)
+            return 'script is not found'
+        elif p.returncode == 1:
+            print(f'{scriptName} did not exit gracefully, Submit a Bug!"')
+            return errors
+        return p

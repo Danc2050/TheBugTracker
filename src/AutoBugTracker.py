@@ -1,5 +1,7 @@
 import argparse
 import os
+from datetime import time
+
 import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
 import src.GithubIssue as githubIssue
@@ -102,16 +104,36 @@ class AutoBugTracker(object):
         scriptName = self.parsingCommandLineArguments()['userScript']
         traceBackOfParentProgram = self.execute.executeScript(scriptName)
         if type(traceBackOfParentProgram) is list:
-            title = "Bug location" + traceBackOfParentProgram[0]
-            description = "Bug Error" + traceBackOfParentProgram[1]
-            bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
-                                                  tracebackInfo=traceBackOfParentProgram, resolved=False)
-            githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
-            self.database.list_insert(bugRecordDTO=bugReport)
-            if self.configOptions.getConfig(key="send_github_issue"):
-                self.github.createIssue(githubIssueToSend)
-            if self.configOptions.getConfig(key="send_email"):
-                self.sendEmail(str(bugReport))
+            self.issueBugreport(traceBackOfParentProgram)
+
+    def listenRun(self):
+        """
+        Listen to invoke script for any bugs to report
+        """
+        scriptName = self.parsingCommandLineArguments()['userScript']
+        process = self.execute.liveExecuteScript(scriptName)
+        if type(process) is not list and type(process) is not str(process):
+            while process.poll is None:
+                _, err = process.communicate()
+                if err:
+                    errors = str(err).split('\\n')
+                    self.issueBugreport(traceBack=errors)
+                    time.sleep(.5)
+
+    def issueBugreport(self, traceBack):
+        """
+        issues bug report according to config file
+        """
+        title = "Bug location" + traceBack[0]
+        description = "Bug Error" + traceBack[1]
+        bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
+                                              tracebackInfo=traceBack, resolved=False)
+        githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
+        self.database.list_insert(bugRecordDTO=bugReport)
+        if self.configOptions.getConfig(key="send_github_issue"):
+            self.github.createIssue(githubIssueToSend)
+        if self.configOptions.getConfig(key="send_email"):
+            self.sendEmail(str(bugReport))
 
 
 if __name__ == '__main__':
