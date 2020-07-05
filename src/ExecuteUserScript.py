@@ -45,17 +45,17 @@ class ExecuteUserScript(object):
         except FileNotFoundError:
             print(f'{scriptName} script is not found!')
             self.logs.writeToFile(message=self.captureTraceback())
-            return 'script is not found'
+            return 'script is not found!'
         except ModuleNotFoundError as e:
             print(f'{e}, module is not found!')
             self.logs.writeToFile(message=self.captureTraceback())
             # Blacklist the script with missing module and notify user. Do not submit Bug!
-            return 'module not found'
+            return 'module is not found!'
         except:
             print(f'{scriptName} did not exit gracefully, Submit a Bug!"')
             return self.captureTraceback()
 
-    def liveExecuteScript(self, scriptName):
+    def listenExecuteScript(self, scriptName):
         """
         returns the script as a child process
         """
@@ -66,11 +66,11 @@ class ExecuteUserScript(object):
         if str(err).find("ModuleNotFoundError:") != -1:
             print(f'{scriptName}, module is not found!')
             self.logs.writeToFile(message=errors)
-            return 'module is not found'
+            return 'module is not found!'
         elif p.returncode == 127:
             print(f'{scriptName} script is not found!')
             self.logs.writeToFile(message=errors)
-            return 'script is not found'
+            return 'script is not found!'
         elif p.returncode == 1:
             print(f'{scriptName} did not exit gracefully, Submit a Bug!"')
             return errors

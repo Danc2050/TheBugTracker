@@ -120,6 +120,7 @@ class AutoBugTracker(object):
                     self.issueBugreport(traceBack=errors)
                     time.sleep(.5)
 
+
     def issueBugreport(self, traceBack):
         """
         issues bug report according to config file
