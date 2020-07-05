@@ -5,7 +5,6 @@ import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
 import src.DatabaseScript as initializeDatabaseScript
 import src.EmailUsers as emailUsers
-from decouple import config
 
 class AutoBugTracker(object):
     def __init__(self):
