@@ -1,5 +1,5 @@
 import argparse
-import src.ExecuteUserScript as ExecuteUserScript
+import src.ExecuteUserScript as executeUserScript
 import src.GithubIntegration as githubIntegration
 import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
@@ -16,7 +16,7 @@ class AutoBugTracker(object):
         # Gets configuration file, if non existent it will create one
         self.configOptions = readConfig.readConfig()
         self.logs = debugLogFile.DebugLogFile(self.configOptions)
-        self.execute = ExecuteUserScript.ExecuteUserScript()
+        self.execute = executeUserScript.ExecuteUserScript()
         self.github = None
         self.email = None
 
