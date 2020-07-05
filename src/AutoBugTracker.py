@@ -1,25 +1,27 @@
 import argparse
+import os
 import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
+import src.GithubIssue as githubIssue
 import src.ReadConfig as readConfig
 import src.DebugLogFile as debugLogFile
 import src.DatabaseScript as initializeDatabaseScript
 import src.EmailUsers as emailUsers
-from decouple import config
+import src.BugRecordDTO as bugRecordDTO
 
 
 class AutoBugTracker(object):
     def __init__(self):
         print("***Auto Bug Tracker***\n")
-        # Initialize database
-        self.database = initializeDatabaseScript.Database()
-        self.dbInitialized = False
         # Gets configuration file, if non existent it will create one
         self.configOptions = readConfig.readConfig()
         self.logs = debugLogFile.DebugLogFile(self.configOptions)
+        # Initialize database
+        self.database = initializeDatabaseScript.Database(self.logs)
+        self.databaseConfiguration()
         self.execute = ExecuteUserScript.ExecuteUserScript(self.configOptions, self.logs)
-        self.github = None
-        self.email = None
+        self.github = self.githubConfiguration()
+        self.email = self.emailConfiguration()
 
     def parsingCommandLineArguments(self):
         """
@@ -58,16 +60,12 @@ class AutoBugTracker(object):
 
         :return: Database initialized
         """
-        if not self.dbInitialized:
-            try:
-                self.database.connect(server_params="postgres_server")
-                self.database.create_database(database_params="postgres_db")
-                self.database.create_table(table_name="Bugs")
-            except Exception as e:
-                self.logs.writeToFile(str(e))
-                return False
-
-            return True
+        try:
+            self.database.connect(server_params="postgres_server")
+            self.database.create_database(database_params="postgres_db")
+            self.database.create_table(table_name="Bugs")
+        except Exception as e:
+            self.logs.writeToFile(str(e))
 
     def emailConfiguration(self):
         """
@@ -75,8 +73,11 @@ class AutoBugTracker(object):
 
         :return: email sent
         """
-        username = config('USER')
-        password = config('KEY')
+        try:
+            username = os.environ["USERNAME"]
+            password = os.environ["PASSWORD"]
+        except KeyError as e:
+            raise KeyError("Please add your email and password to your environment variables file " + str(e))
         try:
             return emailUsers.EmailUsers(username, password)
         except Exception as e:
@@ -92,29 +93,27 @@ class AutoBugTracker(object):
         except Exception as e:
             self.logs.writeToFile(str(e))
 
-    def initialization(self):
-        # Initialize and connect to database
-        self.dbInitialized = self.databaseConfiguration()
-        # Initialize project with github
-        self.github = self.githubConfiguration()
-        # Initialize email information
-        self.email = self.emailConfiguration()
-
     def run(self):
         """
         Return list of traceback if the script did not exist gracefully
 
         it does sort functions of the class in logical order for execution.
         """
-        github = self.githubConfiguration()
         scriptName = self.parsingCommandLineArguments()['userScript']
         traceBackOfParentProgram = self.execute.executeScript(scriptName)
-        if (type(traceBackOfParentProgram) is list):
-            self.database.list_insert(("", "", traceBackOfParentProgram, False))
-            self.sendEmail(traceBackOfParentProgram)
+        if type(traceBackOfParentProgram) is list:
+            title = "Bug location" + traceBackOfParentProgram[0]
+            description = "Bug Error" + traceBackOfParentProgram[1]
+            bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
+                                                  tracebackInfo=traceBackOfParentProgram, resolved=False)
+            githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
+            self.database.list_insert(bugRecordDTO=bugReport)
+            if self.configOptions.getConfig(key="send_github_issue"):
+                self.github.createIssue(githubIssueToSend)
+            if self.configOptions.getConfig(key="send_email"):
+                self.sendEmail(str(bugReport))
 
 
 if __name__ == '__main__':
     execute = AutoBugTracker()
-    execute.initialization()
     execute.run()

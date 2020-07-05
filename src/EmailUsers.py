@@ -1,7 +1,6 @@
 import yagmail
 
 
-
 class EmailUsers:
     def __init__(self, username, password):
         try:
@@ -30,5 +29,3 @@ class EmailUsers:
             self.yag.send(contents=[body], subject=[subject])
         except TypeError as e:
             raise Exception("Type mismatch. Contents may be a string, dictionary, file, or HTML. exception: " + str(e))
-
-
