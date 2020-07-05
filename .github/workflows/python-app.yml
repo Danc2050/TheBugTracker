@@ -33,4 +33,4 @@ jobs:
         docker run --rm --name postgresContainer -e POSTGRES_PASSWORD=my_secret_password -d -p 5432:5432 postgres
     - name: Run with working test script
       run: |
-        python3 AutoBugTracker.py -tests/WorkingTestScript.py
+        python3 src/AutoBugTracker.py -S tests/WorkingTestScript.py
