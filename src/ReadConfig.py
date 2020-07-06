@@ -31,10 +31,10 @@ class readConfig:
 
         """
         if user_info is None:
-            rec = dict(first="John", last="Doe", email="johndoe@doe.com", create_debug_log=True,
-                       overwrite_previous_entry=False, log_file="log.txt",
+            rec = dict(first="John", last="Doe", email="johndoe@doe.com",
+                       create_debug_log=True, overwrite_previous_entry=False, log_file="log.txt",
                        github_integration=False, github_access_token="",
-                       github_repo_name="")
+                       github_repo_name="", send_email=True, send_github_issue=False)
             json.dump(rec, fp=open(self.configPath, 'w'), indent=4)
 
     def showConfig(self):

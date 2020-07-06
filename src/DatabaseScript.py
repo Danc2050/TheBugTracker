@@ -1,20 +1,17 @@
 import psycopg2
 import src.DBConfig as config
-import src.DebugLogFile as Dfl
-import src.ReadConfig as readConfig
 
 from psycopg2.extensions import ISOLATION_LEVEL_AUTOCOMMIT
 
 
 class Database:
-    def __init__(self):
+    def __init__(self, debugLogFile):
         self.db_server_conn = None
         self.database_params = None
         self.db_cursor = None
         self.db_name = None
         self.bug_table_name = None
-        self.debugConfigOptions = readConfig.readConfig()
-        self. debugLogFile = Dfl.DebugLogFile(self.debugConfigOptions)
+        self.debugLogFile = debugLogFile
 
     # Open a connection to the host server that the database is stored on.
     def connect(self, server_params):
@@ -88,7 +85,7 @@ class Database:
                 cursor.close()
                 conn.close()
 
-    def list_insert(self, bug_record):
+    def list_insert(self, bugRecordDTO):
         conn = None
         cursor = None
         try:
@@ -101,7 +98,9 @@ class Database:
                             Resolved) 
                             VALUES (%s, %s, %s, %s) """)
 
-            cursor.execute(insert_query, bug_record)
+            cursor.execute(insert_query,
+                           (bugRecordDTO.title, bugRecordDTO.description,
+                            bugRecordDTO.tracebackInfo, bugRecordDTO.resolved))
             conn.commit()
         except (Exception, psycopg2.Error) as e:
             self.debugLogFile.writeToFile("Could not insert record into table " + str(e))
