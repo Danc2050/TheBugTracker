@@ -1,5 +1,7 @@
 import argparse
 import os
+from time import sleep
+
 import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
 import src.GithubIssue as githubIssue
@@ -95,23 +97,44 @@ class AutoBugTracker(object):
 
     def run(self):
         """
-        Return list of traceback if the script did not exist gracefully
-
-        it does sort functions of the class in logical order for execution.
+        Listen to invoked script for any bugs to report
         """
         scriptName = self.parsingCommandLineArguments()['userScript']
-        traceBackOfParentProgram = self.execute.executeScript(scriptName)
-        if type(traceBackOfParentProgram) is list:
-            title = "Bug location" + traceBackOfParentProgram[0]
-            description = "Bug Error" + traceBackOfParentProgram[1]
-            bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
-                                                  tracebackInfo=traceBackOfParentProgram, resolved=False)
-            githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
-            self.database.list_insert(bugRecordDTO=bugReport)
-            if self.configOptions.getConfig(key="send_github_issue"):
-                self.github.createIssue(githubIssueToSend)
-            if self.configOptions.getConfig(key="send_email"):
-                self.sendEmail(str(bugReport))
+        try:
+            out, errors, process = self.execute.listenExecuteScript(scriptName)
+        except TimeoutError as e:
+            print("run: Fatal Error :" + str(e))
+        if process:
+            if out:
+                self.issueBugreport(traceBack=out)
+            while process.poll is None:
+                out, err = process.communicate()
+                if err:
+                    errors = str(err).split('\\n')
+                    self.issueBugreport(traceBack=errors)
+                if out:
+                    self.issueBugreport(traceBack=out)
+                sleep(.5)
+        else:
+            if out:
+                self.issueBugreport(traceBack=out)
+            if errors:
+                self.issueBugreport(traceBack=errors)
+
+    def issueBugreport(self, traceBack):
+        """
+        issues bug report according to config file
+        """
+        title = "Bug location" + traceBack[0]
+        description = "Bug Error" + traceBack[1]
+        bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
+                                              tracebackInfo=traceBack, resolved=False)
+        githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
+        self.database.list_insert(bugRecordDTO=bugReport)
+        if self.configOptions.getConfig(key="send_github_issue"):
+            self.github.createIssue(githubIssueToSend)
+        if self.configOptions.getConfig(key="send_email"):
+            self.sendEmail(str(bugReport))
 
 
 if __name__ == '__main__':
