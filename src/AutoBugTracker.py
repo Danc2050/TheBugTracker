@@ -1,6 +1,6 @@
 import argparse
 import os
-from datetime import time
+from time import sleep
 
 import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
@@ -100,15 +100,23 @@ class AutoBugTracker(object):
         Listen to invoked script for any bugs to report
         """
         scriptName = self.parsingCommandLineArguments()['userScript']
-        process = self.execute.listenExecuteScript(scriptName)
-        if type(process) is not list and type(process) is not str(process):
+        try:
+            out, errors, process = self.execute.listenExecuteScript(scriptName)
+        except TimeoutError as e:
+            print("run: Fatal Error :" + str(e))
+        if process:
+            if out:
+                self.issueBugreport(traceBack=out)
             while process.poll is None:
-                _, err = process.communicate()
+                out, err = process.communicate()
                 if err:
                     errors = str(err).split('\\n')
                     self.issueBugreport(traceBack=errors)
-                    time.sleep(.5)
-
+                if out:
+                    self.issueBugreport(traceBack=out)
+                sleep(.5)
+        else:
+            self.issueBugreport(traceBack=process)
 
     def issueBugreport(self, traceBack):
         """
