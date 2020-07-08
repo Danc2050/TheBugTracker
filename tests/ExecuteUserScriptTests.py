@@ -1,49 +1,80 @@
 import subprocess
+from datetime import time
+
+from src.ExecuteUserScript import ExecuteUserScript
+import src.ReadConfig as readConfig
+import src.DebugLogFile as debugLogFile
 
 
 class testScript:
     def __init__(self):
         print("testing")
 
-    def testWorkingScript(self):
-        check = subprocess.check_output('python3 ../src/ExecuteUserScript.py -S '
-                                        '../tests/WorkingTestScript.py',
-                                        shell=True, text=True)
-        test = check.find('Traceback')
-        if test == -1:
-            print("Executed workingUserScript successfully. TEST PASSED")
-        else:
-            print("workingUserScript did not execute. TEST FAILED.")
-
-    def testBrokenScript(self):
-        check = subprocess.check_output('python3 ../src/ExecuteUserScript.py -S '
-                                        '../tests/BrokenTestScript.py',
-                                        shell=True, text=True)
-        test = check.find('Traceback')
-        if test != -1:
-            print("Executed brokenTestScript and "
-                  "Traceback was found. TEST PASSED")
-        else:
-            print("Executed brokenTestScript and "
-                  "Traceback was not found. TEST FAILED.")
-
-    def testCommandLine(self):
-        try:
-            print("Test executing workingUserScript without -S, should fail.")
-            subprocess.check_output('python3 ../src/ExecuteUserScript.py ../tests/WorkingTestScript.py', shell=True,
-                                    text=True,
-                                    stderr=True)
-        except Exception:
-            print("test did fail without -S. TEST PASSED")
+    def testWorkingScript(self, tClass):
+        print("Test executing executeScript with a working script")
+        out = tClass.executeScript(scriptName="../tests/WorkingTestScript.py")
+        if type(out) != list and type(out) != str:
+            print("testWorkingScript: PASS")
             return
-        print("Test passed without -S in command line arguments. TEST FAILED")
+        print("testWorkingScript: FAILED")
 
-    def run(self):
-        self.testWorkingScript()
-        self.testBrokenScript()
-        self.testCommandLine()
+    def testMissingModule(self, tClass):
+        print("Test executing executeScript with a script that is missing a module.")
+        out = tClass.executeScript(scriptName="../tests/MissingModuleTestScript.py")
+        if type(out) == str:
+            if out == 'module is not found!':
+                print("testMissingModule: PASS")
+                return
+        print("testMissingModule: FAILED")
+
+    def testMissingFile(self, tClass):
+        print("Test executing executeScript with a missing script file")
+        out = tClass.executeScript(scriptName="../tests/Nada.py")
+        if type(out) == str:
+            if out == 'script is not found!':
+                print("testMissingFile: PASS")
+                return
+        print("testMissingFile: FAILED")
+
+    def testListenWorkingScript(self, tClass):
+        print("Test executing workingUserScript with a working script file")
+        out = tClass.listenExecuteScript(scriptName="../tests/WorkingTestScript.py")
+        if type(out) is subprocess.Popen:
+            if out.poll() is not None:
+                out.kill()
+            print("testListenWorkingScript: PASS")
+            return
+        print("testListenWorkingScript: FAIL")
+
+    def testListenMissingModuleScript(self, tClass):
+        print("Test executing listenExecuteScript with a missing module in script")
+        out = tClass.listenExecuteScript(scriptName="../tests/MissingModuleTestScript.py")
+        if type(out) is str:
+            if out == 'module is not found!':
+                print("testListenMissingModuleScript: PASS")
+                return
+        print("testListenMissingModuleScript: FAIL")
+
+    def testListenMissingFileScript(self, tClass):
+        print("Test executing listenExecuteScript with a missing script file")
+        out = tClass.listenExecuteScript(scriptName="../tests/Nada.py")
+        if type(out) is str:
+            if out == 'script is not found!':
+                print("testListenMissingFileScript: PASS")
+                return
+        print("testListenMissingFileScript: FAIL")
+
+    def run(self, tClass):
+        self.testWorkingScript(tClass=tClass)
+        self.testMissingModule(tClass=tClass)
+        self.testMissingFile(tClass=tClass)
+        self.testListenWorkingScript(tClass=tClass)
+        self.testListenMissingModuleScript(tClass=tClass)
+        self.testListenMissingFileScript(tClass=tClass)
 
 
 if __name__ == '__main__':
+    configOptions = readConfig.readConfig()
+    logs = debugLogFile.DebugLogFile(configOptions)
     test_run = testScript()
-    test_run.run()
+    test_run.run(tClass=ExecuteUserScript(configOptions=configOptions, logs=logs))
