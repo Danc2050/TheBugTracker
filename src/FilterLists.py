@@ -102,16 +102,3 @@ class filterBugReport:
             if not (self.isScriptBlackedOrWhited(self.white_data, data)):
                 with open("white.list", 'a+') as whitefile:
                     whitefile.write(data + "\n")
-
-    def run(self):
-        """
-        executes functions in logical order
-        """
-        self.check_in_both()
-        self.filter_process()
-        self.create_new_report()
-
-
-if __name__ == '__main__':
-    execute = filterBugReport()
-    execute.run()
