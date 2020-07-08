@@ -12,15 +12,19 @@ class filterBugReport:
         put contents of blackfile, whitefile, and bug report into arrays/columns according to delimiter (???)
         does not do anything if there is no files that exist
         """
-        print("***Filtering bug reports with white/black lists***\n")
+        # print("***Filtering bug reports with white/black lists***\n")
         if path.exists("black.list"):
-            blackfile = open("black.list", 'r')
-            self.black_data = blackfile.read().split(DELIMITER)
-            blackfile.close()
+            self.blackfile = open("black.list", 'r')
+            self.black_data = self.blackfile.read().split(DELIMITER)
+            # blackfile.close()
+        else:
+            self.createBlackList()
         if path.exists("white.list"):
-            whitefile = open("white.list", 'r')
-            self.white_data = whitefile.read().split(DELIMITER)
-            whitefile.close()
+            self.whitefile = open("white.list", 'r')
+            self.white_data = self.whitefile.read().split(DELIMITER)
+            # whitefile.close()
+        else:
+            self.createWhiteList()
         if path.exists("bugs.list"):
             bugfile = open("bugs.list", 'r')
             self.bugs = bugfile.read().split(DELIMITER)
@@ -52,6 +56,52 @@ class filterBugReport:
             with open("bugs.list", 'w') as newBugReport:
                 writer = csv.writer(newBugReport, delimiter='\n')
                 writer.writerow(self.bugs)
+
+    def createWhiteList(self):
+        '''
+        Return the data in the white list
+
+        create a new white list
+        '''
+        if not path.exists("white.list"):
+            self.whitefile = open("white.list", 'w+')
+            self.white_data = self.whitefile.read().split(DELIMITER)
+            return self.white_data
+
+    def createBlackList(self):
+        '''
+        Return the data in the black list
+
+        create a new black list
+        '''
+        if not path.exists("black.list"):
+            self.blackfile = open("black.list", 'w+')
+            self.black_data = self.blackfile.read().split(DELIMITER)
+            return self.black_data
+
+    def isScriptBlackedOrWhited(self, fileType, userScript):
+        '''
+        Return boolean
+
+        Does check for the existence of script being execute in either of the white or black list
+        '''
+        fileType = ''.join(fileType)
+        if userScript in fileType:
+            return True
+        return False
+
+    def appendFile(self, files, data):
+        '''
+        Does append the lists according to the file type passed
+        '''
+        if files == "black.list":
+            if not (self.isScriptBlackedOrWhited(self.black_data, data)):
+                with open("black.list", 'a+') as blackFile:
+                    blackFile.write(data + "\n")
+        elif files == "white.list":
+            if not (self.isScriptBlackedOrWhited(self.white_data, data)):
+                with open("white.list", 'a+') as whitefile:
+                    whitefile.write(data + "\n")
 
     def run(self):
         """
