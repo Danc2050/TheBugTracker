@@ -15,12 +15,12 @@ class testReadConfig:
         """
         CASES:
             When file DOES NOT EXIST:
-                localTests PASSES if default file is created
-                localTests FAILS if we encounter an exception
+                test PASSES if default file is created
+                test FAILS if we encounter an exception
                     -- FAIL occurs if unable to load config file
             When file EXISTS:
-                localTests PASSES if config path and config valid
-                localTests FAILS if we encounter an exception
+                test PASSES if config path and config valid
+                test FAILS if we encounter an exception
                     -- FAIL occurs if unable to load config file
         """
         readConfig()
@@ -34,20 +34,20 @@ class testReadConfig:
         test = os.path.join(Path.home(), BUGTRACKER)
         if Path(test).is_file() is True:
             print("TEST SUCCESS: Executed successfully. Config variables initialized. \n")
-            # os.remove(Path(localTests))
+            # os.remove(Path(test))
         else:
             print("TEST FAILED: Encountered an error/exception. \n")
-            # os.remove(Path(localTests))
+            # os.remove(Path(test))
 
     def testGetConfig(self):
         """
         CASES:
             When key is VALID:
-                localTests PASSES if configuration value returned
-                localTests FAILS if None returned
+                test PASSES if configuration value returned
+                test FAILS if None returned
             When key is INVALID:
-                localTests PASSES if None returned
-                localTests FAILS if configuration value returned
+                test PASSES if None returned
+                test FAILS if configuration value returned
         """
         configClass = readConfig(user_info=None)
         test = configClass.getConfig(key='first')
