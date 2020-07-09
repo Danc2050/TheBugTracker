@@ -1,5 +1,6 @@
 import sys
 import traceback
+from src.FilterLists import filterBugReport
 import subprocess
 
 FILE_NOT_FOUND_RETURN_CODE = 127
@@ -9,6 +10,7 @@ class ExecuteUserScript(object):
     def __init__(self, configOptions, logs):
         self.configOptions = configOptions
         self.logs = logs
+        self.filterBugReport = filterBugReport()
 
     def captureTraceback(self):
         """Display the exception that just occurred.
@@ -43,7 +45,8 @@ class ExecuteUserScript(object):
 
         """
         try:
-            return exec(open(scriptName).read())
+            exec(open(scriptName).read())
+            self.filterBugReport.appendFile("white.list", scriptName)
         except FileNotFoundError:
             print(f'{scriptName} script is not found!')
             self.logs.writeToFile(message=self.captureTraceback())
@@ -51,7 +54,7 @@ class ExecuteUserScript(object):
         except ModuleNotFoundError as e:
             print(f'{e}, module is not found!')
             self.logs.writeToFile(message=self.captureTraceback())
-            # Blacklist the script with missing module and notify user. Do not submit Bug!
+            self.filterBugReport.appendFile("black.list", scriptName)
             return 'module is not found!'
         except:
             print(f'{scriptName} did not exit gracefully, Submit a Bug!"')

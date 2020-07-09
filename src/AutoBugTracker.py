@@ -125,8 +125,8 @@ class AutoBugTracker(object):
         """
         issues bug report according to config file
         """
-        title = "Bug location" + traceBack[0]
-        description = "Bug Error" + traceBack[1]
+        title = "Bug location" + str(traceBack[0])
+        description = "Bug Error" + str(traceBack[1])
         bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
                                               tracebackInfo=traceBack, resolved=False)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
