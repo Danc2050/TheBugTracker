@@ -1,8 +1,10 @@
 import argparse
 import os
+import selectors
+import sys
+import subprocess
 from time import sleep
 
-import src.ExecuteUserScript as ExecuteUserScript
 import src.GithubIntegration as githubIntegration
 import src.GithubIssue as githubIssue
 import src.ReadConfig as readConfig
@@ -10,6 +12,7 @@ import src.DebugLogFile as debugLogFile
 import src.DatabaseScript as initializeDatabaseScript
 import src.EmailUsers as emailUsers
 import src.BugRecordDTO as bugRecordDTO
+from src.FilterLists import filterBugReport
 
 
 class AutoBugTracker(object):
@@ -21,9 +24,9 @@ class AutoBugTracker(object):
         # Initialize database
         self.database = initializeDatabaseScript.Database(self.logs)
         self.databaseConfiguration()
-        self.execute = ExecuteUserScript.ExecuteUserScript(self.configOptions, self.logs)
         self.github = self.githubConfiguration()
         self.email = self.emailConfiguration()
+        self.filterBugReport = filterBugReport()
 
     def parsingCommandLineArguments(self):
         """
@@ -100,36 +103,47 @@ class AutoBugTracker(object):
         Listen to invoked script for any bugs to report
         """
         scriptName = self.parsingCommandLineArguments()['userScript']
-        try:
-            out, errors, process = self.execute.listenExecuteScript(scriptName)
-        except TimeoutError as e:
-            print("run: Fatal Error :" + str(e))
-        if process:
-            if out:
-                self.issueBugreport(traceBack=out)
-            while process.poll is None:
-                out, err = process.communicate()
-                if err:
-                    errors = str(err).split('\\n')
-                    self.issueBugreport(traceBack=errors)
-                if out:
-                    self.issueBugreport(traceBack=out)
-                sleep(.5)
-        else:
-            if out:
-                self.issueBugreport(traceBack=out)
-            if errors:
-                self.issueBugreport(traceBack=errors)
+        self.filterBugReport.appendFile("white.list", scriptName)
+        p = subprocess.Popen([scriptName],
+                             stderr=subprocess.PIPE,
+                             stdout=subprocess.PIPE,
+                             stdin=subprocess.PIPE,
+                             shell=True)
 
-    def issueBugreport(self, traceBack):
+        sel = selectors.DefaultSelector()
+        sel.register(p.stderr, selectors.EVENT_READ)
+
+        while True:
+            for key, _ in sel.select():
+                sleep(1.5)
+                traceback = key.fileobj.read1().decode()
+                if not traceback:
+                    exit()
+                parsedTraceback = str(traceback).split("\n")
+
+                # Visual / Demo purposes
+                print(parsedTraceback)
+                print(traceback, end="", file=sys.stderr)
+
+                if str(traceback).find("ModuleNotFoundError:") != -1:
+                    self.filterBugReport.appendFile("black.list", scriptName)
+                    raise Exception(f'{scriptName}, module is not found!')
+                elif str(traceback).find("No such file or directory") != -1:
+                    raise Exception(f'{scriptName} script is not found!')
+
+                self.issueBugReport(traceback=traceback, parsedError=parsedTraceback)
+
+    def issueBugReport(self, traceback, parsedError):
         """
         issues bug report according to config file
         """
-        title = "Bug location" + str(traceBack[0])
-        description = "Bug Error" + str(traceBack[1])
-        bugReport = bugRecordDTO.BugRecordDTO(title=title, description=description,
-                                              tracebackInfo=traceBack, resolved=False)
-        githubIssueToSend = githubIssue.GithubIssue(title=title, body=str(bugReport), labels="bug")
+        if str(parsedError[0]).__contains__("Traceback (most recent call last)"):
+            title = "location -- " + str(parsedError[1])
+        else:
+            title = "location -- " + str(parsedError[0])
+        bugReport = bugRecordDTO.BugRecordDTO(title=title,
+                                              tracebackInfo=traceback, resolved=False)
+        githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")
         self.database.list_insert(bugRecordDTO=bugReport)
         if self.configOptions.getConfig(key="send_github_issue"):
             self.github.createIssue(githubIssueToSend)

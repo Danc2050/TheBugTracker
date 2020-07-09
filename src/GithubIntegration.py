@@ -55,7 +55,6 @@ class GithubIntegration:
         :return: the converted string label to github label
         """
         labelsList = []
-        print(labelsFromRequest)
         labels = labelsFromRequest.split(',')
         try:
             for label in labels:
