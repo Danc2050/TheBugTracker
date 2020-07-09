@@ -12,7 +12,7 @@ def invoke_exception():
     All built-in, non-system-exiting exceptions are derived from this class. All user-defined exceptions
     should also be derived from this class.
     """
-    raise Exception("This is a test exception")
+    raise Exception("This is a localTests exception")
 
 
 def invoke_arithmeticError(i=0):
