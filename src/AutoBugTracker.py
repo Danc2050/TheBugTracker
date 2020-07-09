@@ -116,7 +116,10 @@ class AutoBugTracker(object):
                     self.issueBugreport(traceBack=out)
                 sleep(.5)
         else:
-            self.issueBugreport(traceBack=process)
+            if out:
+                self.issueBugreport(traceBack=out)
+            if errors:
+                self.issueBugreport(traceBack=errors)
 
     def issueBugreport(self, traceBack):
         """
