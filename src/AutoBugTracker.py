@@ -1,6 +1,6 @@
 import argparse
 import os
-import socket
+from flask import request
 
 import src.GithubIntegration as githubIntegration
 import src.GithubIssue as githubIssue
@@ -24,11 +24,6 @@ class AutoBugTracker(object):
         self.github = self.githubConfiguration()
         self.email = self.emailConfiguration()
         self.filterBugReport = filterBugReport()
-        host = socket.gethostname()
-        port = self.configOptions.getConfig("port")
-        self.server_socket = socket.socket()
-        self.server_socket.bind((host, port))
-        self.server_socket.listen(1)
 
     def parsingCommandLineArguments(self):
         """
@@ -100,22 +95,13 @@ class AutoBugTracker(object):
         except Exception as e:
             self.logs.writeToFile(str(e))
 
-    def run(self):
-        conn, address = self.server_socket.accept()  # accept new connection
-        while True:
-            data = conn.recv(1024).decode()
-            if not data:
-                break
-            print("From parent " + str(data))
-            parsedTraceback = str(data).split("\n")
-            self.issueBugReport(traceback=data, parsedError=parsedTraceback)
-
-        conn.close()  # close the connection
-
-    def issueBugReport(self, traceback, parsedError):
+    def issueBugReport(self):
         """
         issues bug report according to config file
         """
+        traceback = request.data.decode("utf-8")
+        parsedError = str(traceback).split("\n")
+        print(traceback)
         if str(parsedError[0]).__contains__("Traceback (most recent call last)"):
             title = "location -- " + str(parsedError[1])
         else:
@@ -132,4 +118,3 @@ class AutoBugTracker(object):
 
 if __name__ == '__main__':
     execute = AutoBugTracker()
-    execute.run()
