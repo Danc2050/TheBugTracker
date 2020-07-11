@@ -1,9 +1,7 @@
 import argparse
 import os
-import selectors
 import sys
-import subprocess
-from time import sleep
+import socket
 
 import src.GithubIntegration as githubIntegration
 import src.GithubIssue as githubIssue
@@ -99,39 +97,30 @@ class AutoBugTracker(object):
             self.logs.writeToFile(str(e))
 
     def run(self):
-        """
-        Listen to invoked script for any bugs to report
-        """
-        scriptName = self.parsingCommandLineArguments()['userScript']
-        self.filterBugReport.appendFile("white.list", scriptName)
-        p = subprocess.Popen([scriptName],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=True)
+        # get the hostname
+        host = self.configOptions.getConfig("host")
+        port = self.configOptions.getConfig("port")
 
-        sel = selectors.DefaultSelector()
-        sel.register(p.stderr, selectors.EVENT_READ)
+        listenSocket = socket.socket()
+        listenSocket.bind((host, port))
 
+        listenSocket.listen(2)
+        conn, address = listenSocket.accept()  # accept new connection
         while True:
-            for key, _ in sel.select():
-                sleep(1.5)
-                traceback = key.fileobj.read1().decode()
-                if not traceback:
-                    exit()
-                parsedTraceback = str(traceback).split("\n")
+            # receive data stream. it won't accept data packet greater than 1024 bytes
+            traceback = conn.recv(1024).decode()
+            if not traceback:
+                # if data is not received break
+                break
+            print("from connected user: " + str(traceback))
+            parsedTraceback = str(traceback).split("\n")
 
-                # Visual / Demo purposes
-                print(parsedTraceback)
-                print(traceback, end="", file=sys.stderr)
+            # Visual / Demo purposes
+            print(parsedTraceback)
+            print(traceback, end="", file=sys.stderr)
+            self.issueBugReport(traceback=traceback, parsedError=parsedTraceback)
 
-                if str(traceback).find("ModuleNotFoundError:") != -1:
-                    self.filterBugReport.appendFile("black.list", scriptName)
-                    raise Exception(f'{scriptName}, module is not found!')
-                elif str(traceback).find("No such file or directory") != -1:
-                    raise Exception(f'{scriptName} script is not found!')
-
-                self.issueBugReport(traceback=traceback, parsedError=parsedTraceback)
+        conn.close()  # close the connection
 
     def issueBugReport(self, traceback, parsedError):
         """
