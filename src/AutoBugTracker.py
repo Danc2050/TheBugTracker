@@ -1,6 +1,5 @@
 import argparse
 import os
-import sys
 import socket
 
 import src.GithubIntegration as githubIntegration
@@ -25,6 +24,11 @@ class AutoBugTracker(object):
         self.github = self.githubConfiguration()
         self.email = self.emailConfiguration()
         self.filterBugReport = filterBugReport()
+        host = socket.gethostname()
+        port = self.configOptions.getConfig("port")
+        self.server_socket = socket.socket()
+        self.server_socket.bind((host, port))
+        self.server_socket.listen(1)
 
     def parsingCommandLineArguments(self):
         """
@@ -97,28 +101,14 @@ class AutoBugTracker(object):
             self.logs.writeToFile(str(e))
 
     def run(self):
-        # get the hostname
-        host = self.configOptions.getConfig("host")
-        port = self.configOptions.getConfig("port")
-
-        listenSocket = socket.socket()
-        listenSocket.bind((host, port))
-
-        listenSocket.listen(2)
-        conn, address = listenSocket.accept()  # accept new connection
+        conn, address = self.server_socket.accept()  # accept new connection
         while True:
-            # receive data stream. it won't accept data packet greater than 1024 bytes
-            traceback = conn.recv(1024).decode()
-            if not traceback:
-                # if data is not received break
+            data = conn.recv(1024).decode()
+            if not data:
                 break
-            print("from connected user: " + str(traceback))
-            parsedTraceback = str(traceback).split("\n")
-
-            # Visual / Demo purposes
-            print(parsedTraceback)
-            print(traceback, end="", file=sys.stderr)
-            self.issueBugReport(traceback=traceback, parsedError=parsedTraceback)
+            print("From parent " + str(data))
+            parsedTraceback = str(data).split("\n")
+            self.issueBugReport(traceback=data, parsedError=parsedTraceback)
 
         conn.close()  # close the connection
 
