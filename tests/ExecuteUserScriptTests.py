@@ -38,18 +38,18 @@ class testScript:
 
     def testListenWorkingScript(self, tClass):
         print("Test executing workingUserScript with a working script file")
-        out = tClass.listenExecuteScript(scriptName="../tests/WorkingTestScript.py")
-        if type(out) is subprocess.Popen:
-            if out.poll() is not None:
-                out.kill()
+        out, errors, process = tClass.listenExecuteScript(scriptName="../tests/WorkingTestScript.py")
+        if out:
+            if process.poll() is not None:
+                process.kill()
             print("testListenWorkingScript: PASS")
             return
         print("testListenWorkingScript: FAIL")
 
     def testListenMissingModuleScript(self, tClass):
         print("Test executing listenExecuteScript with a missing module in script")
-        out = tClass.listenExecuteScript(scriptName="../tests/MissingModuleTestScript.py")
-        if type(out) is str:
+        out, errors, process = tClass.listenExecuteScript(scriptName="../tests/MissingModuleTestScript.py")
+        if out:
             if out == 'module is not found!':
                 print("testListenMissingModuleScript: PASS")
                 return
@@ -57,8 +57,8 @@ class testScript:
 
     def testListenMissingFileScript(self, tClass):
         print("Test executing listenExecuteScript with a missing script file")
-        out = tClass.listenExecuteScript(scriptName="../tests/Nada.py")
-        if type(out) is str:
+        out, errors, process = tClass.listenExecuteScript(scriptName="../tests/Nada.py")
+        if out:
             if out == 'script is not found!':
                 print("testListenMissingFileScript: PASS")
                 return
