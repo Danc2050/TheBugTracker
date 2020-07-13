@@ -110,7 +110,7 @@ class AutoBugTracker(object):
                                               tracebackInfo=traceback, resolved=False)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")
         self.database.list_insert(bugRecordDTO=bugReport)
-        if self.configOptions.getConfig(key="send_github_issue"):
+        if self.configOptions.getConfig(key="send_github_issue") and self.configOptions.getConfig(key="github_integration"):
             self.github.createIssue(githubIssueToSend)
         if self.configOptions.getConfig(key="send_email"):
             self.sendEmail(str(bugReport))
