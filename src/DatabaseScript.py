@@ -66,7 +66,6 @@ class Database:
             # basic Table
             table = ("CREATE TABLE " + table_name + """ (
                         Title text NULL,
-                        Description text NULL,
                         Traceback_info text NULL,
                         Resolved BOOL NULL,
                         PRIMARY KEY (Title)
@@ -92,14 +91,13 @@ class Database:
             conn = psycopg2.connect(**self.database_params)
             cursor = conn.cursor()
             insert_query = (" INSERT INTO " + self.bug_table_name + """(
-                            Title, 
-                            Description, 
+                            Title,  
                             Traceback_info, 
                             Resolved) 
-                            VALUES (%s, %s, %s, %s) """)
+                            VALUES (%s, %s, %s) """)
 
             cursor.execute(insert_query,
-                           (bugRecordDTO.title, bugRecordDTO.description,
+                           (bugRecordDTO.title,
                             bugRecordDTO.tracebackInfo, bugRecordDTO.resolved))
             conn.commit()
         except (Exception, psycopg2.Error) as e:
@@ -159,9 +157,8 @@ class Database:
 
             for row in table_record:
                 print("Title: ", row[0])
-                print("Description: ", row[1])
-                print("Traceback Info: ", row[2])
-                print("Resolved: ", row[3])
+                print("Traceback Info: ", row[1])
+                print("Resolved: ", row[2])
 
         except (Exception, psycopg2.Error) as e:
             self.debugLogFile.writeToFile("Could not retrieve record " + str(e))
