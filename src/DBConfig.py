@@ -1,8 +1,9 @@
 from configparser import ConfigParser
+import os
 
 
 def config(section):
-    filename = '../resource/Database.ini'
+    filename = os.path.abspath('../../resource/Database.ini')
     parser = ConfigParser()
     parser.read(filename)
 
