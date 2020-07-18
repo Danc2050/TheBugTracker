@@ -1,9 +1,6 @@
 import argparse
 import os
-import selectors
-import sys
-import subprocess
-from time import sleep
+from flask import request
 
 import src.GithubIntegration as githubIntegration
 import src.GithubIssue as githubIssue
@@ -98,45 +95,13 @@ class AutoBugTracker(object):
         except Exception as e:
             self.logs.writeToFile(str(e))
 
-    def run(self):
-        """
-        Listen to invoked script for any bugs to report
-        """
-        scriptName = self.parsingCommandLineArguments()['userScript']
-        self.filterBugReport.appendFile("white.list", scriptName)
-        p = subprocess.Popen([scriptName],
-                             stderr=subprocess.PIPE,
-                             stdout=subprocess.PIPE,
-                             stdin=subprocess.PIPE,
-                             shell=True)
-
-        sel = selectors.DefaultSelector()
-        sel.register(p.stderr, selectors.EVENT_READ)
-
-        while True:
-            for key, _ in sel.select():
-                sleep(1.5)
-                traceback = key.fileobj.read1().decode()
-                if not traceback:
-                    exit()
-                parsedTraceback = str(traceback).split("\n")
-
-                # Visual / Demo purposes
-                print(parsedTraceback)
-                print(traceback, end="", file=sys.stderr)
-
-                if str(traceback).find("ModuleNotFoundError:") != -1:
-                    self.filterBugReport.appendFile("black.list", scriptName)
-                    raise Exception(f'{scriptName}, module is not found!')
-                elif str(traceback).find("No such file or directory") != -1:
-                    raise Exception(f'{scriptName} script is not found!')
-
-                self.issueBugReport(traceback=traceback, parsedError=parsedTraceback)
-
-    def issueBugReport(self, traceback, parsedError):
+    def issueBugReport(self):
         """
         issues bug report according to config file
         """
+        traceback = request.data.decode("utf-8")
+        parsedError = str(traceback).split("\n")
+        print(traceback)
         if str(parsedError[0]).__contains__("Traceback (most recent call last)"):
             title = "location -- " + str(parsedError[1])
         else:
@@ -145,7 +110,7 @@ class AutoBugTracker(object):
                                               tracebackInfo=traceback, resolved=False)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")
         self.database.list_insert(bugRecordDTO=bugReport)
-        if self.configOptions.getConfig(key="send_github_issue"):
+        if self.configOptions.getConfig(key="send_github_issue") and self.configOptions.getConfig(key="github_integration"):
             self.github.createIssue(githubIssueToSend)
         if self.configOptions.getConfig(key="send_email"):
             self.sendEmail(str(bugReport))
@@ -153,4 +118,3 @@ class AutoBugTracker(object):
 
 if __name__ == '__main__':
     execute = AutoBugTracker()
-    execute.run()
