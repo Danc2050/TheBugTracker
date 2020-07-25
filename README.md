@@ -41,7 +41,7 @@ Currently the AutoBugTracker client side repository can be cloned [here](https:/
 _Eventually we would like to set this up as a pip package._
 
 #### Usage
-AutoBugTracker can be run by using the command `python3 AutoBugTracker.py client-program`
+AutoBugTracker can be run by using the command `python3 AutoBugLocal.py client-program`
 
 ---
 
@@ -110,9 +110,9 @@ log.txt:
 #### Usage
 The **_server side_** is mostly automated! However, you can login to the server via SSH and:  
 * Run the AutoBugTracker server side program with `python3 src/Server.py`.
-* Update the configuration file.
+* Update the configuration file at `/root .autobug.ini`.
 * Manipulate the database.
-* and end the program / shut the server down.
+* and end the program / shut the server down with `CTRL + C`.
 
 ## Features
 ### Current
