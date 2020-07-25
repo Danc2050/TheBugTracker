@@ -1,7 +1,7 @@
 # AutoBugTracker (Server Side)
 > Updated: 7/25/2020
 
-> NOTE: AutoBugTracker currently exists as two separate and distinct repositories. One, for the [client side](https://github.com/Danc2050/AutoBugLocal) and the other for the [server side](https://github.com/Danc2050/TheBugTracker). You're currently on the server side :smirk:.
+> NOTE: AutoBugTracker currently exists as two separate and distinct repositories. One, for the [client side](https://github.com/Danc2050/AutoBugLocal) and the other for the [server side](https://github.com/Danc2050/TheBugTracker). You're currently on the server side :smirk: :sunny: :ocean:.
 
 ## Contents
 * [Description](#description)
@@ -43,40 +43,43 @@ _Eventually we would like to set this up as a pip package._
 #### Usage
 AutoBugTracker can be run by using the command `python3 AutoBugTracker.py client-program`
 
+---
+
 ### Server Side
 #### Setup
 1. Setting up a google vm instance:
- a. f1 micro 
- b. Allow http requests
+    1. f1 micro 
+    2. Allow http requests
 
 2. Reserve a static IP address for the newly created VM instance
 
 3. Open SSH command line for the newly create VM instance and enter the following commands
- a. `sudo apt-get install python-setuptools python-dev build-essential`
- b. `sudo apt-get install python3-pip`
- c. `sudo passwd` (set a new root password)
- d. `su root` (log into root with the password created from the step before)
- e. `sudo apt-get install docker.io`
- f. `docker run --rm --name postgresContainer -e POSTGRES_PASSWORD=my_secret_password -d -p 5432:5432 postgres`
- g. set environment variables in your `.bashrc` file
-  i. `USERNAME=[EMAIL]`
-  ii. `PASSWORD=[PASSWORD]`
-  iii. `PYTHONPATH=[path-to-src]`
- h. install dependencies
-  i. `pip3 install PyGithub`  
-  ii. `pip3 install psycopg2-binary`  
-  iii. `pip3 install yagmail`
- i. Run program with `python3 src/Server.py`
- j. Shut down server, update your config file located at `/root .autobug.ini`
- k. Start server back up with `python3 src/Server.py`
+    1. `sudo apt-get install python-setuptools python-dev build-essential`
+    2. `sudo apt-get install python3-pip`
+    3. `sudo passwd` (set a new root password)
+    4. `su root` (log into root with the password created from the step before)
+    5. `sudo apt-get install docker.io`
+    6. `docker run --rm --name postgresContainer -e POSTGRES_PASSWORD=my_secret_password -d -p 5432:5432 postgres`
+    7. set environment variables in your `.bashrc` file
+        1. `USERNAME=[EMAIL]`
+        2. `PASSWORD=[PASSWORD]`
+        3. `PYTHONPATH=[path-to-src]`
+    8. install dependencies
+        1. `pip3 install PyGithub`  
+        2. `pip3 install psycopg2-binary`  
+        3. `pip3 install yagmail`
+    9. Run program with `python3 src/Server.py`
+    10. Shut down server, update your config file located at `/root .autobug.ini`
+    11. Start server back up with `python3 src/Server.py`
 
 4. You should now be able to clone the server side [repo](https://github.com/Danc2050/TheBugTracker) to the VM instance via SSH.
----
+
 ##### Relevant Database Info
+
 Database Name: `bug_tracker`  
 Database Username: `postgres`  
 Database Password: `my_secret_password`
----
+
 ##### Example (Default) Configuration File
 
 ```
@@ -94,7 +97,7 @@ Database Password: `my_secret_password`
     "send_github_issue": false
 }
 ```
----
+
 ##### Example Log File
 If `create_debug_log` is set to true, AutoBugTracker will create a file for debugging purposes with a filename of `log_file`  
   
@@ -103,15 +106,13 @@ log.txt:
 2020-07-15 16:05:07 DEBUG    Error while connecting to PostgreSQL Section postgres_server not found on the C:\Users\*****\PycharmProjects\resource\Database.ini file 
 2020-07-15 16:05:07 DEBUG    Could not create table connect() argument after ** must be a mapping, not NoneType
 ```
----
+
 #### Usage
 The **_server side_** is mostly automated! However, you can login to the server via SSH and:  
 * Run the AutoBugTracker server side program with `python3 src/Server.py`.
 * Update the configuration file.
 * Manipulate the database.
 * and end the program / shut the server down.
-
-
 
 ## Features
 ### Current
