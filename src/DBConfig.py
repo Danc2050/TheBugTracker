@@ -3,7 +3,8 @@ import os
 
 
 def config(section):
-    filename = os.path.abspath('../../resource/Database.ini')
+    filename = os.path.abspath("../resource/Database.ini")
+
     parser = ConfigParser()
     parser.read(filename)
 
