@@ -155,10 +155,6 @@ class Database:
             # retrieves all the records that were queried.
             table_record = cursor.fetchall()
 
-            for row in table_record:
-                print("Title: ", row[0])
-                print("Traceback Info: ", row[1])
-                print("Resolved: ", row[2])
 
         except (Exception, psycopg2.Error) as e:
             self.debugLogFile.writeToFile("Could not retrieve record " + str(e))
@@ -166,3 +162,5 @@ class Database:
             if conn:
                 cursor.close()
                 conn.close()
+
+            return table_record
