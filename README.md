@@ -1,7 +1,7 @@
 # AutoBugTracker (Server Side)
-> Updated: 7/25/2020
+> Updated: 7/28/2020
 
-> NOTE: AutoBugTracker currently exists as two separate and distinct repositories. One, for the [client side](https://github.com/Danc2050/AutoBugLocal) and the other for the [server side](https://github.com/Danc2050/TheBugTracker). You're currently on the server side :smirk: :sunny: :ocean:.
+> NOTE: AutoBugTracker currently exists as two separate and distinct repositories. One, for the [local side](https://github.com/Danc2050/AutoBugLocal) and the other for the [server side](https://github.com/Danc2050/TheBugTracker). You're currently on the server side :smirk: :sunny: :ocean:.
 
 ## Contents
 * [Description](#description)
@@ -9,12 +9,8 @@
 	* [Why use AutoBugTracker?](#why-use-autobugtracker)
 	* [Who should use AutoBugTracker?](#who-should-use-autobugtracker)
 * [Instructions](#instructions)
-    * [Client Side](#client-side-setup)
-	    * [Setup](#setup-1)
-	    * [Usage](#usage-1)
-    * [Server Side](#server-side-setup)
-        * [Setup](#setup-2)
-        * [Usage](#usage-2)
+    * [Setup](#setup)
+    * [Usage](#usage)
 * [Features](#features)
 	* [Current](#current)
 	* [Planned](#planned)
@@ -34,19 +30,7 @@ AutoBugTracker facilitates an efficient workflow for programmers, making it a gr
 AutoBugTracker is valuable to developers working in large teams, that need the ability to accumulate a large quantity of debug information from their customers. AutoBugTracker is highly configurable and can be tailored for your teams specific needs.
 
 ## Instructions
-### Client Side
-#### Setup
-Currently the AutoBugTracker client side repository can be cloned [here](https://github.com/Danc2050/AutoBugLocal).  
-  
-_Eventually we would like to set this up as a pip package._
-
-#### Usage
-AutoBugTracker can be run by using the command `python3 AutoBugLocal.py client-program`
-
----
-
-### Server Side
-#### Setup
+### Setup
 1. Setting up a google vm instance:
     1. f1 micro 
     2. Allow http requests
@@ -74,13 +58,13 @@ AutoBugTracker can be run by using the command `python3 AutoBugLocal.py client-p
 
 4. You should now be able to clone the server side [repo](https://github.com/Danc2050/TheBugTracker) to the VM instance via SSH.
 
-##### Relevant Database Info
+#### Relevant Database Info
 
 Database Name: `bug_tracker`  
 Database Username: `postgres`  
 Database Password: `my_secret_password`
 
-##### Example (Default) Configuration File
+#### Example (Default) Configuration File
 
 ```
 {
@@ -98,7 +82,7 @@ Database Password: `my_secret_password`
 }
 ```
 
-##### Example Log File
+#### Example Log File
 If `create_debug_log` is set to true, AutoBugTracker will create a file for debugging purposes with a filename of `log_file`  
   
 log.txt:  
@@ -107,7 +91,7 @@ log.txt:
 2020-07-15 16:05:07 DEBUG    Could not create table connect() argument after ** must be a mapping, not NoneType
 ```
 
-#### Usage
+### Usage
 The **_server side_** is mostly automated! However, you can login to the server via SSH and:  
 * Run the AutoBugTracker server side program with `python3 src/Server.py`.
 * Update the configuration file at `/root .autobug.ini`.
@@ -116,22 +100,16 @@ The **_server side_** is mostly automated! However, you can login to the server 
 
 ## Features
 ### Current
-* Execute client program and capture output of bugs (Client Side).
-* Black-list filtering (Client Side).
-* Allow customization of program settings via the use of configuration file/s (Server Side).
-* Send emails (Server Side).
-* Instantiate a PostgreSQL database (Server Side).
-* Communicate with Github (Server Side).
+* Allow customization of program settings via the use of configuration file/s.
+* Send emails.
+* Instantiate a PostgreSQL database.
+* Communicate with Github.
 
 ### Planned
 * Notify team members that bugs have been resolved via email automatically from remote server.
 
 ### Stretch Goals
 * Alter config options at program execution via command line arguments.
-* Capture bugs from programs written in more languages.
-* Pip package.
-* Formalize project. (Give it more professional layout features, i.e. `__main__.py`, `-help` command, etc.)
-* Record user input to see what they did specifically when a bug occurred.
 
 ## Contributors
 ### Product Owners / Sponsors

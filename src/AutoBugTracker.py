@@ -76,7 +76,7 @@ class AutoBugTracker(object):
         :return: email sent
         """
         try:
-            username = os.environ["USERNAME"]
+            username = os.environ["EMAIL"]
             password = os.environ["PASSWORD"]
         except KeyError as e:
             raise KeyError("Please add your email and password to your environment variables file " + str(e))
@@ -106,6 +106,11 @@ class AutoBugTracker(object):
             title = "location -- " + str(parsedError[1])
         else:
             title = "location -- " + str(parsedError[0])
+
+        retrieve_record = self.database.retrieve_record(title)
+        if retrieve_record:
+            return
+
         bugReport = bugRecordDTO.BugRecordDTO(title=title,
                                               tracebackInfo=traceback, resolved=False)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")
