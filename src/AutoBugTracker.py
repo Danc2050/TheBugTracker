@@ -119,6 +119,10 @@ class AutoBugTracker(object):
             self.github.createIssue(githubIssueToSend)
         if self.configOptions.getConfig(key="send_email"):
             self.sendEmail(str(bugReport))
+        if self.configOptions.getConfig(key="display_console_output"):
+            print(parsedError)
+        if self.configOptions.getConfig(key="email_console_ouput"):
+            self.sendEmail(str(parsedError))
 
 
 if __name__ == '__main__':
