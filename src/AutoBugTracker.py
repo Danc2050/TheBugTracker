@@ -104,9 +104,9 @@ class AutoBugTracker(object):
         parsedError = str(traceback).split("\n")
         print(traceback)
         if str(parsedError[0]).__contains__("Traceback (most recent call last)"):
-            title = "location -- " + str(parsedError[1]) + " ver. " + str(versionNum)
+            title = "location -- " + str(parsedError[1]) + "   -ver " + str(versionNum)
         else:
-            title = "location -- " + str(parsedError[0]) + " ver. " + str(versionNum)
+            title = "location -- " + str(parsedError[0]) + "   -ver " + str(versionNum)
         bugReport = bugRecordDTO.BugRecordDTO(title=title,
                                               tracebackInfo=traceback, resolved=False, version=versionNum)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")

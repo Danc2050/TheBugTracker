@@ -68,7 +68,7 @@ class Database:
                         Title text NULL,
                         Traceback_info text NULL,
                         Resolved BOOL NULL,
-                        version text NULL,
+                        Version text NULL,
                         PRIMARY KEY (Title)
                         ); """)
             # execute the sql query
@@ -95,7 +95,7 @@ class Database:
                             Title,  
                             Traceback_info, 
                             Resolved,
-                            Version,) 
+                            Version) 
                             VALUES (%s, %s, %s, %s); """)
 
             cursor.execute(insert_query,
