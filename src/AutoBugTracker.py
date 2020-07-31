@@ -99,6 +99,7 @@ class AutoBugTracker(object):
         """
         issues bug report according to config file
         """
+        versionNum = self.configOptions.getConfig(key='version_num')
         traceback = request.data.decode("utf-8")
         parsedError = str(traceback).split("\n")
         print(traceback)
@@ -107,7 +108,7 @@ class AutoBugTracker(object):
         else:
             title = "location -- " + str(parsedError[0])
         bugReport = bugRecordDTO.BugRecordDTO(title=title,
-                                              tracebackInfo=traceback, resolved=False)
+                                              tracebackInfo=traceback, resolved=False, version=versionNum)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")
         self.database.list_insert(bugRecordDTO=bugReport)
         if self.configOptions.getConfig(key="send_github_issue") and self.configOptions.getConfig(key="github_integration"):
