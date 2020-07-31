@@ -34,8 +34,7 @@ class readConfig:
             rec = dict(first="John", last="Doe", email="johndoe@doe.com",
                        create_debug_log=True, overwrite_previous_entry=False, log_file="log.txt",
                        github_integration=False, github_access_token="",
-                       github_repo_name="", send_email=True, send_github_issue=False,
-                       display_console_output=False, email_console_outpout=False)
+                       github_repo_name="", send_email=True, send_github_issue=False, version_num="0.0")
             json.dump(rec, fp=open(self.configPath, 'w'), indent=4)
 
     def showConfig(self):
@@ -52,7 +51,7 @@ class readConfig:
         provided. If invalid key provided returns None.
         *CURRENT VALID KEYS: name,email,overwrite_previous_entry,create_debug_log,
                              log_file, github_integration, github_access_token,
-                             github_repo_name
+                             github_repo_name, version_num
         param: key:config file Key
         return: config key value
         """
