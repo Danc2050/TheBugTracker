@@ -76,7 +76,7 @@ class AutoBugTracker(object):
         :return: email sent
         """
         try:
-            username = os.environ["USERNAME"]
+            username = os.environ["EMAIL"]
             password = os.environ["PASSWORD"]
         except KeyError as e:
             raise KeyError("Please add your email and password to your environment variables file " + str(e))
