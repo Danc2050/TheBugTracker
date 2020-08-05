@@ -13,5 +13,5 @@ def issueBug():
 
 
 if __name__ == '__main__':
-    readConfig.readConfig().createDefault()
+    readConfig.readConfig()
     app.run(host='0.0.0.0', debug=True, port=80)
