@@ -107,17 +107,22 @@ class AutoBugTracker(object):
             title = "location -- " + str(parsedError[1]) + "   -ver " + str(versionNum)
         else:
             title = "location -- " + str(parsedError[0]) + "   -ver " + str(versionNum)
+
+        retrieve_record = self.database.retrieve_record(title)
+        if retrieve_record:
+            return
         bugReport = bugRecordDTO.BugRecordDTO(title=title,
                                               tracebackInfo=traceback, resolved=False, version=versionNum)
         githubIssueToSend = githubIssue.GithubIssue(title=title, body=traceback, labels="bug")
         self.database.list_insert(bugRecordDTO=bugReport)
-        if self.configOptions.getConfig(key="send_github_issue") and self.configOptions.getConfig(key="github_integration"):
+        if self.configOptions.getConfig(key="send_github_issue") and self.configOptions.getConfig(
+                key="github_integration"):
             self.github.createIssue(githubIssueToSend)
         if self.configOptions.getConfig(key="send_email"):
             self.sendEmail(str(bugReport))
         if self.configOptions.getConfig(key="display_console_output"):
             print(parsedError)
-        if self.configOptions.getConfig(key="email_console_ouput"):
+        if self.configOptions.getConfig(key="email_console_output"):
             self.sendEmail(str(parsedError))
 
 

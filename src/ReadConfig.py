@@ -34,7 +34,8 @@ class readConfig:
             rec = dict(first="John", last="Doe", email="johndoe@doe.com",
                        create_debug_log=True, overwrite_previous_entry=False, log_file="log.txt",
                        github_integration=False, github_access_token="",
-                       github_repo_name="", send_email=True, send_github_issue=False, version_num="0.0")
+                       github_repo_name="", send_email=True, send_github_issue=False, version_num="0.0",
+                       display_console_output=False, email_console_output=False)
             json.dump(rec, fp=open(self.configPath, 'w'), indent=4)
 
     def showConfig(self):
@@ -59,7 +60,7 @@ class readConfig:
             try:
                 return self.config[key]
             except KeyError:
-                print("Invalid configuration key provided")
+                print("Invalid configuration key provided " + str(key))
                 return None
 
     def addToConfig(self, **kwargs):
